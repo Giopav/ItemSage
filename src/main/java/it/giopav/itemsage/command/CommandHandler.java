@@ -18,12 +18,13 @@ public class CommandHandler implements CommandExecutor {
         if (args.length > 0) {
             switch (args[0].toLowerCase()) {
                 case "help":
-                    return Help.help(player, args);
+                    return true;
                 case "name":
                     return Name.name(player, args);
                 default:
             }
         }
+
         return false;
     }
 }

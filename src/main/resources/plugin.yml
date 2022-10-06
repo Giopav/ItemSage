@@ -7,5 +7,5 @@ description: The Item Sage helps you get a glimpse of everything.
 commands:
   isage:
     description: Your description
-    usage: §cType /<command> help for a hand.
+    usage: §cType /<command> help for a hint.
     permission: yourplugin.yourcommandpermission
