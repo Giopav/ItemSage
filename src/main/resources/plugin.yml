@@ -5,7 +5,7 @@ api-version: 1.19
 authors: [ Giopav ]
 description: The Item Sage helps you get a glimpse of everything.
 commands:
-  isage:
+  itemsage:
     description: Your description
     usage: §cType /<command> help for a hint.
-    permission: yourplugin.yourcommandpermission
+    permission: itemsage.command

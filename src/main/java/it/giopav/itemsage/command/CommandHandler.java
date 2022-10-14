@@ -1,5 +1,6 @@
 package it.giopav.itemsage.command;
 
+import it.giopav.itemsage.command.command.Name;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;

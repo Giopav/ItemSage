@@ -1,4 +1,4 @@
-package it.giopav.itemsage.command;
+package it.giopav.itemsage.command.command;
 
 import org.bukkit.entity.Player;
 

@@ -10,7 +10,7 @@ public final class ItemSage extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        Objects.requireNonNull(this.getCommand("isage")).setTabCompleter(new TabCompleteHandler());
-        Objects.requireNonNull(this.getCommand("isage")).setExecutor(new CommandHandler());
+        Objects.requireNonNull(this.getCommand("itemsage")).setTabCompleter(new TabCompleteHandler());
+        Objects.requireNonNull(this.getCommand("itemsage")).setExecutor(new CommandHandler());
     }
 }
