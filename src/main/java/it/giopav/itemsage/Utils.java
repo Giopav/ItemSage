@@ -4,6 +4,8 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.inventory.EquipmentSlot;
 
 import java.util.regex.Pattern;
 
@@ -27,5 +29,29 @@ public class Utils {
             string = MiniMessage.miniMessage().serialize(component);
         }
         return string;
+    }
+
+    // Returns the respective attribute from the provided string.
+    // If there is none, null is give instead.
+    public static Attribute getAttributeValue(String string) {
+        Attribute attribute = null;
+        for (Attribute attributeElement : Attribute.values()) {
+            if (attributeElement.toString().equals(string)) {
+                attribute = attributeElement;
+            }
+        }
+        return attribute;
+    }
+
+    // Returns the respective equipment slot from the provided string.
+    // If there is none, null is give instead.
+    public static EquipmentSlot getEquipmentSlotValue(String string) {
+        EquipmentSlot equipmentSlot = null;
+        for (EquipmentSlot equipmentSlotElement : EquipmentSlot.values()) {
+            if (equipmentSlotElement.name().equals(string)) {
+                equipmentSlot = equipmentSlotElement;
+            }
+        }
+        return equipmentSlot;
     }
 }

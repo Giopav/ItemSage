@@ -1,4 +1,4 @@
-package it.giopav.itemsage.command.itemargs;
+package it.giopav.itemsage.command.flaghandler;
 
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -6,8 +6,9 @@ import org.bukkit.inventory.ItemStack;
 import java.util.List;
 import java.util.Objects;
 
-public class FlagArg {
-    public static void flagTabComplete(List<String> completions, ItemStack mainHandItem, String[] args) {
+public class FlagTabCompleter {
+
+    public static void tabComplete(List<String> completions, ItemStack mainHandItem, String[] args) {
         boolean condition = !mainHandItem.getType().isAir() && !mainHandItem.getItemFlags().isEmpty();
         if (args.length == 2) {
             if (condition) {
@@ -29,4 +30,5 @@ public class FlagArg {
         }
         return false;
     }
+
 }

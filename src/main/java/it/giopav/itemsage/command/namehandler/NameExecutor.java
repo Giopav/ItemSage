@@ -1,33 +1,17 @@
-package it.giopav.itemsage.command.itemargs;
+package it.giopav.itemsage.command.namehandler;
 
 import it.giopav.itemsage.Utils;
 import net.kyori.adventure.text.format.TextDecoration;
-import net.kyori.adventure.text.minimessage.MiniMessage;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
-import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.List;
-import java.util.Objects;
-
 import static it.giopav.itemsage.Utils.deserializeRightString;
 
-public class NameArg {
-    public static void nameTabComplete(List<String> completions, ItemStack mainHandItem, String[] args) {
-        if (args.length == 2) {
-            if (!mainHandItem.getType().isAir() && mainHandItem.getItemMeta().hasDisplayName()) {
-                completions.add(LegacyComponentSerializer.legacyAmpersand().serialize(Objects.requireNonNull(mainHandItem.getItemMeta().displayName())));
-                completions.add(MiniMessage.miniMessage().serialize(Objects.requireNonNull(mainHandItem.getItemMeta().displayName())));
-                completions.add(PlainTextComponentSerializer.plainText().serialize(Objects.requireNonNull(mainHandItem.getItemMeta().displayName())));
-            }
-            completions.add("set");
-        }
-    }
+public class NameExecutor {
 
-    public static boolean nameCommandExecutor(Player player, String[] args) {
+    public static boolean command(Player player, String[] args) {
         ItemStack mainHandItem = player.getEquipment().getItemInMainHand();
         if (mainHandItem.getType().isAir()) {
             player.sendMessage(ChatColor.RED + "You have to hold an item in your main hand.");
@@ -35,16 +19,16 @@ public class NameArg {
         }
 
         if (args.length == 1) {
-            return args1CommandExecutor(player, mainHandItem);
+            return args1(player, mainHandItem);
         } else if (args.length > 2) {
-            return argsMoreThan2CommandExecutor(player, args, mainHandItem);
+            return argsMoreThan2(player, args, mainHandItem);
         }
 
         player.sendMessage(ChatColor.RED + "This command doesn't work like this.");
         return false;
     }
 
-    private static boolean args1CommandExecutor(Player player, ItemStack mainHandItem) {
+    private static boolean args1(Player player, ItemStack mainHandItem) {
         if (!mainHandItem.getItemMeta().hasDisplayName()) {
             player.sendMessage(ChatColor.RED + "This item does not have a name.");
             return false;
@@ -55,7 +39,7 @@ public class NameArg {
         return true;
     }
 
-    private static boolean argsMoreThan2CommandExecutor(Player player, String[] args, ItemStack mainHandItem) {
+    private static boolean argsMoreThan2(Player player, String[] args, ItemStack mainHandItem) {
         if (!args[1].equalsIgnoreCase("set")) {
             player.sendMessage(ChatColor.RED + "This command doesn't work like this.");
             return false;
@@ -70,4 +54,5 @@ public class NameArg {
         player.sendMessage(ChatColor.GREEN + "The display name has been set to " + ChatColor.RESET + stringBuilder + ".");
         return true;
     }
+
 }

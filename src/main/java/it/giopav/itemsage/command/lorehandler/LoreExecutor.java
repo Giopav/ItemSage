@@ -1,11 +1,8 @@
-package it.giopav.itemsage.command.itemargs;
+package it.giopav.itemsage.command.lorehandler;
 
 import it.giopav.itemsage.Utils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextDecoration;
-import net.kyori.adventure.text.minimessage.MiniMessage;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
-import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -16,28 +13,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
-public class LoreArg {
-    public static void loreTabComplete(List<String> completions, ItemStack mainHandItem, String[] args) {
-        boolean condition = !mainHandItem.getType().isAir() && mainHandItem.getItemMeta().hasLore();
-        if (args.length == 2) {
-            if (condition) {
-                for (int i = 0; i< Objects.requireNonNull(mainHandItem.getItemMeta().lore()).size(); i++) {
-                    completions.add(String.valueOf(i+1));
-                }
-            }
-            completions.add("add");
-        } else if (args.length == 3
-                && condition
-                && Pattern.matches("\\d+", args[1])
-                && Objects.requireNonNull(mainHandItem.getItemMeta().lore()).size() > Integer.parseInt(args[1])-1) {
-            completions.add("remove");
-            completions.add(LegacyComponentSerializer.legacyAmpersand().serialize(Objects.requireNonNull(mainHandItem.lore()).get(Integer.parseInt(args[1])-1)));
-            completions.add(MiniMessage.miniMessage().serialize(Objects.requireNonNull(mainHandItem.lore()).get(Integer.parseInt(args[1])-1)));
-            completions.add(PlainTextComponentSerializer.plainText().serialize(Objects.requireNonNull(mainHandItem.lore()).get(Integer.parseInt(args[1])-1)));
-        }
-    }
+public class LoreExecutor {
 
-    public static boolean loreCommandExecutor(Player player, String[] args) {
+    public static boolean command(Player player, String[] args) {
         ItemStack mainHandItem = player.getEquipment().getItemInMainHand();
         if (mainHandItem.getType().isAir()) {
             player.sendMessage(ChatColor.RED + "You have to hold an item in your main hand.");
@@ -45,9 +23,9 @@ public class LoreArg {
         }
 
         if (args.length == 2) {
-            return args2CommandExecutor(player, args, mainHandItem);
+            return args2(player, args, mainHandItem);
         } else if (args.length >= 3) {
-            return args3OrMoreCommandExecutor(player, args, mainHandItem);
+            return args3OrMore(player, args, mainHandItem);
         }
 
         player.sendMessage(ChatColor.RED + "This command doesn't work like this.");
@@ -56,7 +34,7 @@ public class LoreArg {
 
     // Returns true or false, depending on whether the command succeeds or not.
     // Called if the arguments are 2.
-    private static boolean args2CommandExecutor(Player player, String[] args, ItemStack mainHandItem) {
+    private static boolean args2(Player player, String[] args, ItemStack mainHandItem) {
         if (args[1].equalsIgnoreCase("add")) {
             player.sendMessage(ChatColor.RED + "You have to enter a line to add.");
             return false;
@@ -73,11 +51,11 @@ public class LoreArg {
 
     // Returns true or false, depending on whether the command succeeds or not.
     // Called if the arguments are 3 or more.
-    private static boolean args3OrMoreCommandExecutor(Player player, String[] args, ItemStack mainHandItem) {
+    private static boolean args3OrMore(Player player, String[] args, ItemStack mainHandItem) {
         if (args[1].equalsIgnoreCase("add")) {
-            return args3AddCommandExecutor(player, args, mainHandItem);
+            return args3Add(player, args, mainHandItem);
         } else if (Pattern.matches("\\d+", args[1])) {
-            return args3LineCommandExecutor(player, args, mainHandItem);
+            return args3Line(player, args, mainHandItem);
         } else {
             player.sendMessage(ChatColor.RED + "This command doesn't work like this.");
             return false;
@@ -86,7 +64,7 @@ public class LoreArg {
 
     // Returns true or false, depending on whether the command succeeds or not.
     // Called if the arguments are 3 or more and the second arg is "add".
-    private static boolean args3AddCommandExecutor(Player player, String[] args, ItemStack mainHandItem) {
+    private static boolean args3Add(Player player, String[] args, ItemStack mainHandItem) {
         mainHandItem.setItemMeta(addLoreLine(mainHandItem.getItemMeta(), stringFromArray(args)));
         player.sendMessage(ChatColor.GREEN + "The lore has been added.");
         return true;
@@ -94,7 +72,7 @@ public class LoreArg {
 
     // Returns true or false, depending on whether the command succeeds or not.
     // Called if the arguments are 3 or more and the second arg is a line (int).
-    private static boolean args3LineCommandExecutor(Player player, String[] args, ItemStack mainHandItem) {
+    private static boolean args3Line(Player player, String[] args, ItemStack mainHandItem) {
         if (!mainHandItem.getItemMeta().hasLore()) {
             player.sendMessage(ChatColor.RED + "This item does not have a lore.");
             return false;

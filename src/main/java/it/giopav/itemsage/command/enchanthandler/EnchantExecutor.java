@@ -1,4 +1,4 @@
-package it.giopav.itemsage.command.itemargs;
+package it.giopav.itemsage.command.enchanthandler;
 
 import org.bukkit.ChatColor;
 import org.bukkit.NamespacedKey;
@@ -6,34 +6,11 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.List;
-import java.util.Objects;
 import java.util.regex.Pattern;
 
-public class EnchantArg {
-    public static void enchantTabComplete(List<String> completions, ItemStack mainHandItem, String[] args) {
-        boolean condition = !mainHandItem.getType().isAir() && mainHandItem.getItemMeta().hasEnchants();
-        if (args.length == 2) {
-            if (condition) {
-                for (Enchantment enchantment : mainHandItem.getEnchantments().keySet()) {
-                    completions.add(enchantment.getKey().toString().replace("minecraft:", ""));
-                }
-            }
-            completions.add("add");
-        } else if (args.length == 3
-                && condition
-                && mainHandItem.getItemMeta().getEnchants().containsKey(Enchantment.getByKey(NamespacedKey.fromString(args[1])))) {
-            completions.add("remove");
-            completions.add(String.valueOf(mainHandItem.getItemMeta().getEnchantLevel(Objects.requireNonNull(Enchantment.getByKey(NamespacedKey.fromString(args[1]))))));
-        } else if (args.length == 3
-                && args[1].equalsIgnoreCase("add")) {
-            for (Enchantment enchantment : Enchantment.values()) {
-                completions.add(enchantment.getKey().toString().replace("minecraft:", ""));
-            }
-        }
-    }
+public class EnchantExecutor {
 
-    public static boolean enchantCommandExecutor(Player player, String[] args) {
+    public static boolean command(Player player, String[] args) {
         ItemStack mainHandItem = player.getEquipment().getItemInMainHand();
         if (mainHandItem.getType().isAir()) {
             player.sendMessage(ChatColor.RED + "You have to hold an item in your main hand.");
@@ -41,18 +18,18 @@ public class EnchantArg {
         }
 
         if (args.length == 3) {
-            return args3CommandExecutor(player, args, mainHandItem);
+            return args3(player, args, mainHandItem);
         } else if (args.length == 4) {
-            return args4CommandExecutor(player, args, mainHandItem);
+            return args4(player, args, mainHandItem);
         }
 
         player.sendMessage(ChatColor.RED + "This command doesn't work like this.");
         return false;
     }
 
-    private static boolean args3CommandExecutor(Player player, String[] args, ItemStack mainHandItem) {
+    private static boolean args3(Player player, String[] args, ItemStack mainHandItem) {
         if (args[1].equalsIgnoreCase("add")) {
-            return args3AddCommandExecutor(player, args, mainHandItem);
+            return args3Add(player, args, mainHandItem);
         }
         args[1] = args[1].toLowerCase();
         Enchantment enchantment = Enchantment.getByKey(NamespacedKey.fromString(args[1]));
@@ -79,7 +56,7 @@ public class EnchantArg {
         return false;
     }
 
-    private static boolean args3AddCommandExecutor(Player player, String[] args, ItemStack mainHandItem) {
+    private static boolean args3Add(Player player, String[] args, ItemStack mainHandItem) {
         args[2] = args[2].toLowerCase();
         Enchantment enchantment = Enchantment.getByKey(NamespacedKey.fromString(args[2]));
         if (enchantment == null) {
@@ -91,7 +68,7 @@ public class EnchantArg {
         return true;
     }
 
-    private static boolean args4CommandExecutor(Player player, String[] args, ItemStack mainHandItem) {
+    private static boolean args4(Player player, String[] args, ItemStack mainHandItem) {
         if (!args[1].equalsIgnoreCase("add")) {
             player.sendMessage(ChatColor.RED + "This command doesn't work like this.");
             return false;
@@ -118,4 +95,5 @@ public class EnchantArg {
         player.sendMessage(ChatColor.GREEN + "The enchantment " + enchantment.getKey() + " " + args[3] + " has been added to the item.");
         return true;
     }
+
 }

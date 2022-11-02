@@ -1,9 +1,14 @@
 package it.giopav.itemsage.command;
 
-import it.giopav.itemsage.command.itemargs.*;
+import it.giopav.itemsage.command.amounthandler.AmountTabCompleter;
+import it.giopav.itemsage.command.attributehandler.AttributeTabCompleter;
+import it.giopav.itemsage.command.enchanthandler.EnchantTabCompleter;
+import it.giopav.itemsage.command.flaghandler.FlagTabCompleter;
+import it.giopav.itemsage.command.lorehandler.LoreTabCompleter;
+import it.giopav.itemsage.command.materialhandler.MaterialTabCompleter;
+import it.giopav.itemsage.command.namehandler.NameTabCompleter;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
@@ -15,41 +20,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CommandHandler implements CommandExecutor, TabCompleter {
-
-    @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        if (!(sender instanceof Player)) {
-            sender.sendMessage(ChatColor.RED + "The command can only be executed via game.");
-            return false;
-        }
-        Player player = (Player) sender;
-        if (args.length > 0) {
-            switch (args[0].toLowerCase()) {
-                case "help":
-                    return Help.help(player);
-                case "lore":
-                    return LoreArg.loreCommandExecutor(player, args);
-                case "enchant":
-                    return EnchantArg.enchantCommandExecutor(player, args);
-                case "attribute":
-                    return AttributeArg.attributeCommandExecutor(player, args);
-                case "flag":
-                    //TODO
-                    return true;
-                case "name":
-                    return NameArg.nameCommandExecutor(player, args);
-                case "amount":
-                    return AmountArg.amountCommandExecutor(player, args);
-                case "material":
-                    return MaterialArg.materialCommandExecutor(player, args);
-                default:
-                    player.sendMessage(ChatColor.RED + "I don't recognize the argument.");
-                    return false;
-            }
-        }
-        return false;
-    }
+public class ItemsageTabCompleter implements TabCompleter {
 
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
@@ -80,25 +51,25 @@ public class CommandHandler implements CommandExecutor, TabCompleter {
         } else if (args.length > 1) {
             switch (args[0]) {
                 case "name":
-                    NameArg.nameTabComplete(completions, mainHandItem, args);
+                    NameTabCompleter.tabComplete(completions, mainHandItem, args);
                     break;
                 case "lore":
-                    LoreArg.loreTabComplete(completions, mainHandItem, args);
+                    LoreTabCompleter.tabComplete(completions, mainHandItem, args);
                     break;
                 case "enchant":
-                    EnchantArg.enchantTabComplete(completions, mainHandItem, args);
+                    EnchantTabCompleter.tabComplete(completions, mainHandItem, args);
                     break;
                 case "attribute":
-                    AttributeArg.attributeTabComplete(completions, mainHandItem, args);
+                    AttributeTabCompleter.tabComplete(completions, mainHandItem, args);
                     break;
                 case "flag":
-                    FlagArg.flagTabComplete(completions, mainHandItem, args);
+                    FlagTabCompleter.tabComplete(completions, mainHandItem, args);
                     break;
                 case "amount":
-                    AmountArg.amountTabComplete(completions, mainHandItem, args);
+                    AmountTabCompleter.tabComplete(completions, mainHandItem, args);
                     break;
                 case "material":
-                    MaterialArg.materialTabComplete(completions, mainHandItem, args);
+                    MaterialTabCompleter.tabComplete(completions, mainHandItem, args);
                     break;
                 default:
             }
@@ -106,4 +77,5 @@ public class CommandHandler implements CommandExecutor, TabCompleter {
         }
         return null;
     }
+
 }

@@ -1,23 +1,14 @@
-package it.giopav.itemsage.command.itemargs;
+package it.giopav.itemsage.command.amounthandler;
 
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.List;
 import java.util.regex.Pattern;
 
-public class AmountArg {
-    public static void amountTabComplete(List<String> completions, ItemStack mainHandItem, String[] args) {
-        if (args.length == 2) {
-            if (mainHandItem.getType().isAir()) {
-                completions.add(String.valueOf(mainHandItem.getAmount()));
-            }
-            completions.add("set");
-        }
-    }
+public class AmountExecutor {
 
-    public static boolean amountCommandExecutor(Player player, String[] args) {
+    public static boolean command(Player player, String[] args) {
         ItemStack mainHandItem = player.getEquipment().getItemInMainHand();
         if (mainHandItem.getType().isAir()) {
             player.sendMessage(ChatColor.RED + "You have to hold an item in your main hand.");
@@ -25,21 +16,21 @@ public class AmountArg {
         }
 
         if (args.length == 1) {
-            return args1CommandExecutor(player, mainHandItem);
+            return args1(player, mainHandItem);
         } else if (args.length == 3) {
-            return args3CommandExecutor(player, args, mainHandItem);
+            return args3(player, args, mainHandItem);
         }
 
         player.sendMessage(ChatColor.RED + "This command doesn't work like this.");
         return false;
     }
 
-    private static boolean args1CommandExecutor(Player player, ItemStack mainHandItem) {
+    private static boolean args1(Player player, ItemStack mainHandItem) {
         player.sendMessage(ChatColor.GREEN + "The item's amount is " + mainHandItem.getAmount() + ".");
         return true;
     }
 
-    private static boolean args3CommandExecutor(Player player, String[] args, ItemStack mainHandItem) {
+    private static boolean args3(Player player, String[] args, ItemStack mainHandItem) {
         if (!args[1].equalsIgnoreCase("set")) {
             player.sendMessage(ChatColor.RED + "This command doesn't work like this.");
             return false;
@@ -60,4 +51,5 @@ public class AmountArg {
         player.sendMessage(ChatColor.GREEN + "The item's amount has been set to " + args[2] + ".");
         return true;
     }
+
 }
