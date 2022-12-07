@@ -2,6 +2,7 @@ package it.giopav.itemsage.command.lorehandler;
 
 import it.giopav.itemsage.Utils;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -22,19 +23,37 @@ public class LoreExecutor {
             return false;
         }
 
-        if (args.length == 2) {
-            return args2(player, args, mainHandItem);
+        if (args.length == 1) {
+            return sendLore(player, mainHandItem);
+        } else if (args.length == 2) {
+            return sendLine(player, args, mainHandItem);
         } else if (args.length >= 3) {
-            return args3OrMore(player, args, mainHandItem);
+            return redirect(player, args, mainHandItem);
         }
 
         player.sendMessage(ChatColor.RED + "This command doesn't work like this.");
         return false;
     }
 
+    private static boolean sendLore(Player player, ItemStack mainHandItem) {
+        if (!mainHandItem.getItemMeta().hasLore()) {
+            player.sendMessage(ChatColor.RED + "This item doesn't have a lore.");
+            return false;
+        }
+        List<Component> lore = mainHandItem.getItemMeta().lore();
+        assert lore != null;
+        player.sendMessage(ChatColor.GREEN + "The lore is:");
+        for (Component line : lore) {
+            player.sendMessage(line
+                    .hoverEvent(Component.text(ChatColor.WHITE + "» Click to copy «"))
+                    .clickEvent(ClickEvent.copyToClipboard(String.valueOf(line))));
+        }
+        return true;
+    }
+
     // Returns true or false, depending on whether the command succeeds or not.
     // Called if the arguments are 2.
-    private static boolean args2(Player player, String[] args, ItemStack mainHandItem) {
+    private static boolean sendLine(Player player, String[] args, ItemStack mainHandItem) {
         if (args[1].equalsIgnoreCase("add")) {
             player.sendMessage(ChatColor.RED + "You have to enter a line to add.");
             return false;
@@ -43,19 +62,29 @@ public class LoreExecutor {
             player.sendMessage(ChatColor.RED + "You have to enter a valid lore line.");
             return false;
         }
-        player.sendMessage(ChatColor.GREEN + "The selected lore is "
-                + ChatColor.RESET + Objects.requireNonNull(mainHandItem.getItemMeta().lore()).get(Integer.parseInt(args[1]))
-                + ChatColor.GREEN + ".");
+        if (args[1].equals("0")) {
+            player.sendMessage(ChatColor.RED + "The first valid lore line is \"1\".");
+            return false;
+        }
+        if (Objects.requireNonNull(mainHandItem.getItemMeta().lore()).size() <= Integer.parseInt(args[1])-1) {
+            player.sendMessage(ChatColor.RED + "This item does not reach line " + args[1] + ".");
+            return false;
+        }
+
+        player.sendMessage(ChatColor.GREEN + "The selected line is:");
+        Component line = Objects.requireNonNull(mainHandItem.getItemMeta().lore()).get(Integer.parseInt(args[1])-1);
+        player.sendMessage(Component.text(ChatColor.RESET.toString() + line)
+                .clickEvent(ClickEvent.copyToClipboard(String.valueOf(line))));
         return true;
     }
 
     // Returns true or false, depending on whether the command succeeds or not.
     // Called if the arguments are 3 or more.
-    private static boolean args3OrMore(Player player, String[] args, ItemStack mainHandItem) {
+    private static boolean redirect(Player player, String[] args, ItemStack mainHandItem) {
         if (args[1].equalsIgnoreCase("add")) {
-            return args3Add(player, args, mainHandItem);
+            return addLine(player, args, mainHandItem);
         } else if (Pattern.matches("\\d+", args[1])) {
-            return args3Line(player, args, mainHandItem);
+            return editLine(player, args, mainHandItem);
         } else {
             player.sendMessage(ChatColor.RED + "This command doesn't work like this.");
             return false;
@@ -64,7 +93,7 @@ public class LoreExecutor {
 
     // Returns true or false, depending on whether the command succeeds or not.
     // Called if the arguments are 3 or more and the second arg is "add".
-    private static boolean args3Add(Player player, String[] args, ItemStack mainHandItem) {
+    private static boolean addLine(Player player, String[] args, ItemStack mainHandItem) {
         mainHandItem.setItemMeta(addLoreLine(mainHandItem.getItemMeta(), stringFromArray(args)));
         player.sendMessage(ChatColor.GREEN + "The lore has been added.");
         return true;
@@ -72,9 +101,13 @@ public class LoreExecutor {
 
     // Returns true or false, depending on whether the command succeeds or not.
     // Called if the arguments are 3 or more and the second arg is a line (int).
-    private static boolean args3Line(Player player, String[] args, ItemStack mainHandItem) {
+    private static boolean editLine(Player player, String[] args, ItemStack mainHandItem) {
         if (!mainHandItem.getItemMeta().hasLore()) {
             player.sendMessage(ChatColor.RED + "This item does not have a lore.");
+            return false;
+        }
+        if (args[1].equals("0")) {
+            player.sendMessage(ChatColor.RED + "The first valid lore line is \"1\".");
             return false;
         }
         if (Objects.requireNonNull(mainHandItem.getItemMeta().lore()).size() <= Integer.parseInt(args[1])-1) {
@@ -86,13 +119,14 @@ public class LoreExecutor {
             player.sendMessage(ChatColor.RED + "To do so, write \"/itemsage lore " + args[1] + " remove\".");
             return false;
         }
+
         if (args[2].equalsIgnoreCase("remove")) {
             mainHandItem.setItemMeta(removeLoreLine(mainHandItem.getItemMeta(), Integer.parseInt(args[1])-1));
             player.sendMessage(ChatColor.GREEN + "The lore has been removed.");
-            return true;
+        } else {
+            mainHandItem.setItemMeta(setLoreLine(mainHandItem.getItemMeta(), Integer.parseInt(args[1])-1, stringFromArray(args)));
+            player.sendMessage(ChatColor.GREEN + "The lore has been set.");
         }
-        mainHandItem.setItemMeta(setLoreLine(mainHandItem.getItemMeta(), Integer.parseInt(args[1])-1, stringFromArray(args)));
-        player.sendMessage(ChatColor.GREEN + "The lore has been set.");
         return true;
     }
 
@@ -109,7 +143,7 @@ public class LoreExecutor {
     private static ItemMeta setLoreLine(ItemMeta itemMeta, int line, String string) {
         List<Component> lore = itemMeta.lore();
         assert lore != null;
-        lore.set(line, Utils.deserializeRightString(string).decoration(TextDecoration.ITALIC, false));
+        lore.set(line, Utils.deserializeRightString(ChatColor.RESET + string));
         itemMeta.lore(lore);
         return itemMeta;
     }
@@ -130,7 +164,7 @@ public class LoreExecutor {
 
     // Only used for the command arguments.
     // Returns the input array as a string connected by spaces (and trimmed at the end ofc).
-    // -> IGNORES THE FIRST 2 ELEMENTS <-
+    // !! IGNORES THE FIRST 2 ELEMENTS !!
     // This is because the first two elements are always the arguments of the command, not the line.
     private static String stringFromArray(String[] strings) {
         StringBuilder stringBuilder = new StringBuilder();

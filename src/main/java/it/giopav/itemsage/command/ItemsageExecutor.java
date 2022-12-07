@@ -27,7 +27,7 @@ public class ItemsageExecutor implements CommandExecutor {
                 case "help":
                     return Help.command(player);
                 case "lore":
-                    return LoreExecutor.command(player, args);
+                    return LoreExecutor.command(player, args); //TODO check for negative lore lines
                 case "enchant":
                     return EnchantExecutor.command(player, args);
                 case "attribute":

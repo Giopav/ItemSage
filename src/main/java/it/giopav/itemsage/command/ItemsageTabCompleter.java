@@ -22,23 +22,25 @@ import java.util.List;
 
 public class ItemsageTabCompleter implements TabCompleter {
 
+    // TabCompletes for args.length == 1 with help, name, lore, enchant, attribute, flag, amount, and material.
+    // For args.length > 1 it calls the respective class and method, if there is none it just returns null.
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (!(sender instanceof Player)) {
             sender.sendMessage(ChatColor.RED + "The command can only be executed via game.");
             return null;
         }
-        for (int i = 0; i < args.length; i++) {
-            if (i == args.length-1) {
-                break;
-            } else if (args[i].equals("")) {
+        for (int i = 0; i < args.length-1; i++) {
+            if (args[i].equals("")) {
                 return null;
             }
         }
         Player player = (Player) sender;
         ItemStack mainHandItem = player.getEquipment().getItemInMainHand();
         List<String> completions = new ArrayList<>();
-        if (args.length == 1) {
+        if (player.getEquipment().getItemInMainHand().getType().isAir()) {
+            completions.add("help");
+        } else if (args.length == 1) {
             completions.add("help");
             completions.add("name");
             completions.add("lore");
@@ -47,7 +49,6 @@ public class ItemsageTabCompleter implements TabCompleter {
             completions.add("flag");
             completions.add("amount");
             completions.add("material");
-            return StringUtil.copyPartialMatches(args[0], completions, new ArrayList<>());
         } else if (args.length > 1) {
             switch (args[0]) {
                 case "name":
@@ -73,9 +74,8 @@ public class ItemsageTabCompleter implements TabCompleter {
                     break;
                 default:
             }
-            return StringUtil.copyPartialMatches(args[args.length-1], completions, new ArrayList<>());
         }
-        return null;
+        return StringUtil.copyPartialMatches(args[args.length-1], completions, new ArrayList<>());
     }
 
 }

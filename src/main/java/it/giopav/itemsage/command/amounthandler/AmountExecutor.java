@@ -1,5 +1,7 @@
 package it.giopav.itemsage.command.amounthandler;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickEvent;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -16,21 +18,25 @@ public class AmountExecutor {
         }
 
         if (args.length == 1) {
-            return args1(player, mainHandItem);
+            return sendAmount(player, mainHandItem);
         } else if (args.length == 3) {
-            return args3(player, args, mainHandItem);
+            return setAmount(player, args, mainHandItem);
         }
 
         player.sendMessage(ChatColor.RED + "This command doesn't work like this.");
         return false;
     }
 
-    private static boolean args1(Player player, ItemStack mainHandItem) {
-        player.sendMessage(ChatColor.GREEN + "The item's amount is " + mainHandItem.getAmount() + ".");
+    private static boolean sendAmount(Player player, ItemStack mainHandItem) {
+        int amount = mainHandItem.getAmount();
+        player.sendMessage(ChatColor.GREEN + "The item's amount has been set to:");
+        player.sendMessage(Component.text(amount)
+                .hoverEvent(Component.text(ChatColor.WHITE + "» Click to copy «"))
+                .clickEvent(ClickEvent.copyToClipboard(String.valueOf(amount))));
         return true;
     }
 
-    private static boolean args3(Player player, String[] args, ItemStack mainHandItem) {
+    private static boolean setAmount(Player player, String[] args, ItemStack mainHandItem) {
         if (!args[1].equalsIgnoreCase("set")) {
             player.sendMessage(ChatColor.RED + "This command doesn't work like this.");
             return false;
@@ -39,17 +45,21 @@ public class AmountExecutor {
             player.sendMessage(ChatColor.RED + "You have to input a number.");
             return false;
         }
-        if (Integer.parseInt(args[2]) < 1) {
+        int amount = Integer.parseInt(args[2]);
+        if (amount < 1) {
             player.sendMessage(ChatColor.RED + "The amount can't be lower than 1.");
             return false;
         }
-        if (Integer.parseInt(args[2]) > mainHandItem.getType().getMaxStackSize()) {
+        if (amount > mainHandItem.getType().getMaxStackSize()) {
             player.sendMessage(ChatColor.RED + "The amount can't be bigger than " + mainHandItem.getType().getMaxStackSize() + ".");
             return false;
         }
-        mainHandItem.setAmount(Integer.parseInt(args[2]));
-        player.sendMessage(ChatColor.GREEN + "The item's amount has been set to " + args[2] + ".");
+
+        mainHandItem.setAmount(amount);
+        player.sendMessage(ChatColor.GREEN + "The item's amount has been set to:");
+        player.sendMessage(Component.text(amount)
+                .hoverEvent(Component.text(ChatColor.WHITE + "» Click to copy «"))
+                .clickEvent(ClickEvent.copyToClipboard(String.valueOf(amount))));
         return true;
     }
-
 }
