@@ -14,16 +14,16 @@ public class MaterialTabCompleter {
             completions.add(mainHandItem.getType().getKey().toString().toUpperCase().replaceFirst("MINECRAFT:", ""));
         } else if (args.length == 3
                 && args[1].equals("set")) {
-            completions.addAll(materialsCompletion());
+            completions.addAll(allMaterials());
         }
     }
 
-    private static List<String> materialsCompletion() {
-        List<String> materialList = new ArrayList<>();
+    private static List<String> allMaterials() {
+        List<String> materials = new ArrayList<>();
         for (Material material : Material.values()) {
-            materialList.add(material.toString());
+            materials.add(material.toString());
         }
-        return materialList;
+        return materials;
     }
 
 }

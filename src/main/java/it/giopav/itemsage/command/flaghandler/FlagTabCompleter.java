@@ -4,6 +4,8 @@ import it.giopav.itemsage.Utils;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -17,21 +19,25 @@ public class FlagTabCompleter {
     //      - remove
     public static void tabComplete(List<String> completions, ItemStack mainHandItem, String[] args) {
         if (args.length == 2) {
-            if (!mainHandItem.getItemFlags().isEmpty()) {
-                for (ItemFlag itemFlag : Objects.requireNonNull(mainHandItem.getItemFlags())) {
-                    completions.add(itemFlag.toString());
-                }
-            }
             completions.add("add");
+            completions.addAll(itemFlags(mainHandItem));
         } else if (args.length == 3
                 && !mainHandItem.getItemFlags().isEmpty()
                 && Utils.getItemFlagValue(args[1]) != null
-                && containsItemFlag(mainHandItem, Utils.getItemFlagValue(args[1]))) {
+                && mainHandItem.hasItemFlag(Utils.getItemFlagValue(args[1]))) {
             completions.add("remove");
         }
     }
 
-    private static boolean containsItemFlag(ItemStack itemStack, ItemFlag itemFlag) {
-        return itemStack.hasItemFlag(itemFlag);
+    private static List<String> itemFlags(ItemStack mainHandItem) {
+        if (mainHandItem.getItemFlags().isEmpty()) {
+            return Collections.emptyList();
+        }
+        List<String> flags = new ArrayList<>();
+        for (ItemFlag itemFlag : Objects.requireNonNull(mainHandItem.getItemFlags())) {
+            flags.add(itemFlag.toString());
+        }
+        return flags;
     }
+
 }

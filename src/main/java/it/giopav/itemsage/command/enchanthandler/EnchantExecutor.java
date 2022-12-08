@@ -1,11 +1,16 @@
 package it.giopav.itemsage.command.enchanthandler;
 
+import it.giopav.itemsage.Utils;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.ChatColor;
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.Map;
 import java.util.regex.Pattern;
 
 public class EnchantExecutor {
@@ -17,20 +22,79 @@ public class EnchantExecutor {
             return false;
         }
 
-        if (args.length == 3) {
-            return args3(player, args, mainHandItem);
+        if (args.length == 1) {
+            return sendEnchantments(player, mainHandItem);
+        } else if (args.length == 2) {
+            return sendEnchantment(player, args, mainHandItem);
+        } else if (args.length == 3) {
+            return redirect(player, args, mainHandItem);
         } else if (args.length == 4) {
-            return args4(player, args, mainHandItem);
+            return addEnchantAndLevel(player, args, mainHandItem);
         }
 
         player.sendMessage(ChatColor.RED + "This command doesn't work like this.");
         return false;
     }
 
-    private static boolean args3(Player player, String[] args, ItemStack mainHandItem) {
-        if (args[1].equalsIgnoreCase("add")) {
-            return args3Add(player, args, mainHandItem);
+    private static boolean sendEnchantments(Player player, ItemStack mainHandItem) {
+        if (!mainHandItem.getItemMeta().hasEnchants()) {
+            player.sendMessage(ChatColor.RED + "This item is not enchanted.");
+            return false;
         }
+
+        player.sendMessage(ChatColor.GREEN + "The enchantments are:");
+        Map<Enchantment, Integer> enchantments = mainHandItem.getEnchantments();
+        for (int i = 0; i < enchantments.size(); i++) {
+            Enchantment enchantment = (Enchantment) enchantments.keySet().toArray()[i];
+            player.sendMessage(Component.text(ChatColor.GRAY + String.valueOf(i+1) + ") " + ChatColor.AQUA)
+                    .append(enchantHoverClickMessage(enchantment, enchantments.get(enchantment))));
+        }
+        return true;
+    }
+
+    private static boolean sendEnchantment(Player player, String[] args, ItemStack mainHandItem) {
+        if (!mainHandItem.getItemMeta().hasEnchants()) {
+            player.sendMessage(ChatColor.RED + "This item is not enchanted.");
+            return false;
+        }
+        if (Utils.getEnchantmentValue(args[1]) == null) {
+            player.sendMessage(ChatColor.RED + "The entered enchantment does not exist.");
+            return false;
+        }
+        Enchantment enchantment = Utils.getEnchantmentValue(args[1]);
+        if (!mainHandItem.getItemMeta().hasEnchant(enchantment)) {
+            player.sendMessage(ChatColor.RED + "This item does not have the entered enchantment.");
+            return false;
+        }
+
+        player.sendMessage(ChatColor.GREEN + "The enchantment is:");
+        player.sendMessage(enchantHoverClickMessage(enchantment, mainHandItem.getEnchantmentLevel(enchantment)));
+        return true;
+    }
+
+    private static boolean redirect(Player player, String[] args, ItemStack mainHandItem) {
+        if (args[1].equalsIgnoreCase("add")) {
+            return addEnchant(player, args, mainHandItem);
+        } else {
+            return editEnchant(player, args, mainHandItem);
+        }
+    }
+
+    private static boolean addEnchant(Player player, String[] args, ItemStack mainHandItem) {
+        args[2] = args[2].toLowerCase();
+        Enchantment enchantment = Enchantment.getByKey(NamespacedKey.fromString(args[2]));
+        if (enchantment == null) {
+            player.sendMessage(ChatColor.RED + "The enchantment " + args[2].toUpperCase() + " does not exist.");
+            return false;
+        }
+
+        mainHandItem.addUnsafeEnchantment(enchantment, enchantment.getStartLevel());
+        player.sendMessage(ChatColor.GREEN + "The enchantment has been added to your item:");
+        player.sendMessage(enchantHoverClickMessage(enchantment, enchantment.getStartLevel()));
+        return true;
+    }
+
+    private static boolean editEnchant(Player player, String[] args, ItemStack mainHandItem) {
         args[1] = args[1].toLowerCase();
         Enchantment enchantment = Enchantment.getByKey(NamespacedKey.fromString(args[1]));
         if (enchantment == null) {
@@ -42,33 +106,24 @@ public class EnchantExecutor {
             return false;
         }
 
+        int enchantmentLevel;
         if (args[2].equalsIgnoreCase("remove")) {
+            enchantmentLevel = mainHandItem.getEnchantmentLevel(enchantment);
             mainHandItem.removeEnchantment(enchantment);
-            player.sendMessage(ChatColor.GREEN + "The enchantment " + enchantment.getKey() + " has been removed.");
-            return true;
+            player.sendMessage(ChatColor.GREEN + "The enchantment has been removed:");
         } else if (Pattern.matches("\\d+", args[2])) {
-            mainHandItem.addUnsafeEnchantment(enchantment, Integer.parseInt(args[2]));
-            player.sendMessage(ChatColor.GREEN + "The enchantment " + enchantment.getKey() + " " + args[2] + " has been added to the item.");
-            return true;
-        }
-
-        player.sendMessage(ChatColor.RED + "This command doesn't work like this.");
-        return false;
-    }
-
-    private static boolean args3Add(Player player, String[] args, ItemStack mainHandItem) {
-        args[2] = args[2].toLowerCase();
-        Enchantment enchantment = Enchantment.getByKey(NamespacedKey.fromString(args[2]));
-        if (enchantment == null) {
-            player.sendMessage(ChatColor.RED + "The enchantment " + args[2] + " doesn't exist.");
+            enchantmentLevel = Integer.parseInt(args[2]);
+            mainHandItem.addUnsafeEnchantment(enchantment, enchantmentLevel);
+            player.sendMessage(ChatColor.GREEN + "The enchantment has been edited to:");
+        } else {
+            player.sendMessage(ChatColor.RED + "This command doesn't work like this.");
             return false;
         }
-        mainHandItem.addUnsafeEnchantment(enchantment, enchantment.getStartLevel());
-        player.sendMessage(ChatColor.GREEN + "The enchantment " + enchantment.getKey() + " " + enchantment.getStartLevel() + " has been added to the item.");
+        player.sendMessage(enchantHoverClickMessage(enchantment, enchantmentLevel));
         return true;
     }
 
-    private static boolean args4(Player player, String[] args, ItemStack mainHandItem) {
+    private static boolean addEnchantAndLevel(Player player, String[] args, ItemStack mainHandItem) {
         if (!args[1].equalsIgnoreCase("add")) {
             player.sendMessage(ChatColor.RED + "This command doesn't work like this.");
             return false;
@@ -91,9 +146,27 @@ public class EnchantExecutor {
             player.sendMessage(ChatColor.RED + "The level can't be higher that " + 100 + ".");
             return false;
         }
-        mainHandItem.addUnsafeEnchantment(enchantment, Integer.parseInt(args[3]));
-        player.sendMessage(ChatColor.GREEN + "The enchantment " + enchantment.getKey() + " " + args[3] + " has been added to the item.");
+
+        int enchantmentLevel = Integer.parseInt(args[3]);
+        mainHandItem.addUnsafeEnchantment(enchantment, enchantmentLevel);
+        player.sendMessage(ChatColor.GREEN + "The enchantment has been added to your item:");
+        player.sendMessage(enchantHoverClickMessage(enchantment, enchantmentLevel));
         return true;
+    }
+
+    private static Component enchantHoverClickMessage(Enchantment enchantment, int enchantmentLevel) {
+        Component enchantmentDisplayName = enchantment.displayName(enchantmentLevel);
+        String enchantmentKeyAndLevel = enchantment.getKey().toString().toUpperCase().replace("MINECRAFT:", "") + " " + enchantmentLevel;
+        return Component.text()
+                .append(enchantmentDisplayName
+                        .hoverEvent(Component.text(ChatColor.WHITE + "» Click to copy «"))
+                        .clickEvent(ClickEvent.copyToClipboard(PlainTextComponentSerializer.plainText().serialize(enchantmentDisplayName))))
+                .append(Component.text(" " + ChatColor.GRAY + "("))
+                .append(Component.text(enchantmentKeyAndLevel)
+                        .hoverEvent(Component.text(ChatColor.WHITE + "» Click to copy «"))
+                        .clickEvent(ClickEvent.copyToClipboard(enchantmentKeyAndLevel)))
+                .append(Component.text(")"))
+                .build();
     }
 
 }

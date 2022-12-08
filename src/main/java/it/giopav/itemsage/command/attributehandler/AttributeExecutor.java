@@ -104,6 +104,7 @@ public class AttributeExecutor {
     }
 
     private static boolean args5(Player player, String[] args, ItemStack mainHandItem) {
+        player.sendMessage(ChatColor.RED + "You reached args 5!");
         return false;
     }
 

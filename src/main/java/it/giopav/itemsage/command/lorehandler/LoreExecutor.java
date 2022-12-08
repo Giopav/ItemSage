@@ -43,10 +43,9 @@ public class LoreExecutor {
         List<Component> lore = mainHandItem.getItemMeta().lore();
         assert lore != null;
         player.sendMessage(ChatColor.GREEN + "The lore is:");
-        for (Component line : lore) {
-            player.sendMessage(line
-                    .hoverEvent(Component.text(ChatColor.WHITE + "» Click to copy «"))
-                    .clickEvent(ClickEvent.copyToClipboard(String.valueOf(line))));
+        for (int i = 0; i < lore.size(); i++) {
+            player.sendMessage(Component.text(ChatColor.GRAY + String.valueOf(i+1) + ") " + ChatColor.RESET)
+                    .append(lineHoverClickMessage(lore.get(i))));
         }
         return true;
     }
@@ -58,12 +57,16 @@ public class LoreExecutor {
             player.sendMessage(ChatColor.RED + "You have to enter a line to add.");
             return false;
         }
+        if (!mainHandItem.getItemMeta().hasLore()) {
+            player.sendMessage(ChatColor.RED + "This item doesn't have a lore.");
+            return false;
+        }
         if (!Pattern.matches("\\d+", args[1])) {
             player.sendMessage(ChatColor.RED + "You have to enter a valid lore line.");
             return false;
         }
         if (args[1].equals("0")) {
-            player.sendMessage(ChatColor.RED + "The first valid lore line is \"1\".");
+            player.sendMessage(ChatColor.RED + "The first valid lore line is 1.");
             return false;
         }
         if (Objects.requireNonNull(mainHandItem.getItemMeta().lore()).size() <= Integer.parseInt(args[1])-1) {
@@ -73,8 +76,7 @@ public class LoreExecutor {
 
         player.sendMessage(ChatColor.GREEN + "The selected line is:");
         Component line = Objects.requireNonNull(mainHandItem.getItemMeta().lore()).get(Integer.parseInt(args[1])-1);
-        player.sendMessage(Component.text(ChatColor.RESET.toString() + line)
-                .clickEvent(ClickEvent.copyToClipboard(String.valueOf(line))));
+        player.sendMessage(lineHoverClickMessage(line));
         return true;
     }
 
@@ -94,8 +96,10 @@ public class LoreExecutor {
     // Returns true or false, depending on whether the command succeeds or not.
     // Called if the arguments are 3 or more and the second arg is "add".
     private static boolean addLine(Player player, String[] args, ItemStack mainHandItem) {
-        mainHandItem.setItemMeta(addLoreLine(mainHandItem.getItemMeta(), stringFromArray(args)));
-        player.sendMessage(ChatColor.GREEN + "The lore has been added.");
+        String lineString = stringFromArray(args);
+        mainHandItem.setItemMeta(addLoreLine(mainHandItem.getItemMeta(), lineString));
+        player.sendMessage(ChatColor.GREEN + "The lore line has been added:");
+        player.sendMessage(lineHoverClickMessage(Utils.deserializeRightString(lineString)));
         return true;
     }
 
@@ -106,26 +110,32 @@ public class LoreExecutor {
             player.sendMessage(ChatColor.RED + "This item does not have a lore.");
             return false;
         }
-        if (args[1].equals("0")) {
+        int lineIndex = Integer.parseInt(args[1]);
+        if (lineIndex == 0) {
             player.sendMessage(ChatColor.RED + "The first valid lore line is \"1\".");
             return false;
         }
-        if (Objects.requireNonNull(mainHandItem.getItemMeta().lore()).size() <= Integer.parseInt(args[1])-1) {
-            player.sendMessage(ChatColor.RED + "This item does not reach line " + args[1] + ".");
+        if (Objects.requireNonNull(mainHandItem.getItemMeta().lore()).size() <= lineIndex-1) {
+            player.sendMessage(ChatColor.RED + "This item does not reach line " + lineIndex + ".");
             return false;
         }
         if (args[2].equalsIgnoreCase("remove") && args.length > 3) {
             player.sendMessage(ChatColor.RED + "You can't remove parts of the line, only the line in its entirety.");
-            player.sendMessage(ChatColor.RED + "To do so, write \"/itemsage lore " + args[1] + " remove\".");
+            player.sendMessage(ChatColor.RED + "To do so, write \"/itemsage lore " + lineIndex + " remove\".");
             return false;
         }
 
         if (args[2].equalsIgnoreCase("remove")) {
-            mainHandItem.setItemMeta(removeLoreLine(mainHandItem.getItemMeta(), Integer.parseInt(args[1])-1));
-            player.sendMessage(ChatColor.GREEN + "The lore has been removed.");
+            List<Component> lore = mainHandItem.getItemMeta().lore();
+            assert lore != null;
+            mainHandItem.setItemMeta(removeLoreLine(mainHandItem.getItemMeta(), lineIndex-1));
+            player.sendMessage(ChatColor.GREEN + "The lore line " + lineIndex + " has been removed:");
+            player.sendMessage(lineHoverClickMessage(lore.get(lineIndex)));
         } else {
-            mainHandItem.setItemMeta(setLoreLine(mainHandItem.getItemMeta(), Integer.parseInt(args[1])-1, stringFromArray(args)));
-            player.sendMessage(ChatColor.GREEN + "The lore has been set.");
+            String line = stringFromArray(args);
+            mainHandItem.setItemMeta(setLoreLine(mainHandItem.getItemMeta(), line, lineIndex-1));
+            player.sendMessage(ChatColor.GREEN + "The lore line " + lineIndex + " has been set to:");
+            player.sendMessage(lineHoverClickMessage(Utils.deserializeRightString(line)));
         }
         return true;
     }
@@ -140,10 +150,10 @@ public class LoreExecutor {
     }
 
     // Returns the ItemMeta with the string set at the position (of the lore) given.
-    private static ItemMeta setLoreLine(ItemMeta itemMeta, int line, String string) {
+    private static ItemMeta setLoreLine(ItemMeta itemMeta, String string, int line) {
         List<Component> lore = itemMeta.lore();
         assert lore != null;
-        lore.set(line, Utils.deserializeRightString(ChatColor.RESET + string));
+        lore.set(line, Utils.deserializeRightString(string).decoration(TextDecoration.ITALIC, false));
         itemMeta.lore(lore);
         return itemMeta;
     }
@@ -168,9 +178,17 @@ public class LoreExecutor {
     // This is because the first two elements are always the arguments of the command, not the line.
     private static String stringFromArray(String[] strings) {
         StringBuilder stringBuilder = new StringBuilder();
-        for (int i = 2; i<strings.length; i++) {
+        for (int i = 2; i < strings.length; i++) {
             stringBuilder.append(strings[i]).append(" ");
         }
         return stringBuilder.toString().trim();
     }
+
+    private static Component lineHoverClickMessage(Component line) {
+        String lineString = Utils.serializeRightString(line);
+        return line
+                .hoverEvent(Component.text(ChatColor.WHITE + "» Click to copy «"))
+                .clickEvent(ClickEvent.copyToClipboard(lineString));
+    }
+
 }

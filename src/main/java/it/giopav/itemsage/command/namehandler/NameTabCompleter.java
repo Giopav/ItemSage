@@ -12,11 +12,11 @@ public class NameTabCompleter {
     public static void tabComplete(List<String> completions, ItemStack mainHandItem, String[] args) {
         if (args.length == 2) {
             completions.add("set");
-            completions.addAll(displayNameCompletion(mainHandItem.getItemMeta()));
+            completions.addAll(itemDisplayName(mainHandItem.getItemMeta()));
         }
     }
 
-    private static List<String> displayNameCompletion(ItemMeta mainHandItemMeta) {
+    private static List<String> itemDisplayName(ItemMeta mainHandItemMeta) {
         if (mainHandItemMeta.hasDisplayName()) {
             return Collections.singletonList(Utils.serializeRightString(mainHandItemMeta.displayName()));
         }

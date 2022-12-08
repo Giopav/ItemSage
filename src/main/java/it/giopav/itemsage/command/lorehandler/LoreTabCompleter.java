@@ -15,7 +15,7 @@ public class LoreTabCompleter {
     public static void tabComplete(List<String> completions, ItemStack mainHandItem, String[] args) {
         if (args.length == 2) {
             completions.add("add");
-            completions.addAll(linesCompletion(mainHandItem.getItemMeta()));
+            completions.addAll(itemLoreLines(mainHandItem.getItemMeta()));
         } else if (args.length == 3
                 && mainHandItem.getItemMeta().hasLore()
                 && Pattern.matches("\\d+", args[1])
@@ -25,15 +25,15 @@ public class LoreTabCompleter {
         }
     }
 
-    private static List<String> linesCompletion(ItemMeta mainHandItemMeta) {
-        List<String> linesList = new ArrayList<>();
+    private static List<String> itemLoreLines(ItemMeta mainHandItemMeta) {
         if (!mainHandItemMeta.hasLore()) {
             return Collections.emptyList();
         }
+        List<String> lines = new ArrayList<>();
         for (int i = 0; i< Objects.requireNonNull(mainHandItemMeta.lore()).size(); i++) {
-            linesList.add(String.valueOf(i+1));
+            lines.add(String.valueOf(i+1));
         }
-        return linesList;
+        return lines;
     }
 
 }

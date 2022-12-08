@@ -7,8 +7,6 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.Objects;
-
 public class MaterialExecutor {
 
     public static boolean command(Player player, String[] args) {
@@ -29,11 +27,9 @@ public class MaterialExecutor {
     }
 
     private static boolean sendMaterial(Player player, ItemStack mainHandItem) {
-        String materialString = mainHandItem.getType().getKey().toString().toUpperCase().replaceFirst("MINECRAFT:", "");
+        Material material = mainHandItem.getType();
         player.sendMessage(ChatColor.GREEN + "The item's material is:");
-        player.sendMessage(Component.text(materialString)
-                .hoverEvent(Component.text(ChatColor.WHITE + "» Click to copy «"))
-                .clickEvent(ClickEvent.copyToClipboard(materialString)));
+        player.sendMessage(materialHoverClickMessage(material));
         return true;
     }
 
@@ -48,11 +44,19 @@ public class MaterialExecutor {
             return false;
         }
 
-        mainHandItem.setType(Objects.requireNonNull(Material.getMaterial(materialString)));
+        Material material = Material.getMaterial(materialString);
+        assert material != null;
+        mainHandItem.setType(material);
         player.sendMessage(ChatColor.GREEN + "The item's material has been set to:");
-        player.sendMessage(Component.text(materialString)
-                .hoverEvent(Component.text(ChatColor.WHITE + "» Click to copy «"))
-                .clickEvent(ClickEvent.copyToClipboard(materialString)));
+        player.sendMessage(materialHoverClickMessage(material));
         return true;
     }
+
+    private static Component materialHoverClickMessage(Material material) {
+        String materialString = material.toString().toUpperCase().replaceFirst("MINECRAFT:", "");
+        return Component.text(materialString)
+                .hoverEvent(Component.text(ChatColor.WHITE + "» Click to copy «"))
+                .clickEvent(ClickEvent.copyToClipboard(materialString));
+    }
+
 }

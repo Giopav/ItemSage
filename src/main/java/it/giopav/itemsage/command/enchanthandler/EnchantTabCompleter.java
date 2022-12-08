@@ -1,11 +1,12 @@
 package it.giopav.itemsage.command.enchanthandler;
 
-import org.bukkit.NamespacedKey;
+import it.giopav.itemsage.Utils;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 
 public class EnchantTabCompleter {
 
@@ -21,22 +22,39 @@ public class EnchantTabCompleter {
     public static void tabComplete(List<String> completions, ItemStack mainHandItem, String[] args) {
         if (args.length == 2) {
             completions.add("add");
-            if (mainHandItem.getItemMeta().hasEnchants()) {
-                for (Enchantment enchantment : mainHandItem.getEnchantments().keySet()) {
-                    completions.add(enchantment.getKey().toString().replace("minecraft:", ""));
-                }
-            }
-        } else if (args.length == 3
-                && mainHandItem.getItemMeta().hasEnchants()
-                && mainHandItem.getItemMeta().getEnchants().containsKey(Enchantment.getByKey(NamespacedKey.fromString(args[1])))) {
-            completions.add("remove");
-            completions.add(String.valueOf(mainHandItem.getItemMeta().getEnchantLevel(Objects.requireNonNull(Enchantment.getByKey(NamespacedKey.fromString(args[1]))))));
+            completions.addAll(itemEnchantments(mainHandItem));
         } else if (args.length == 3
                 && args[1].equalsIgnoreCase("add")) {
-            for (Enchantment enchantment : Enchantment.values()) {
-                completions.add(enchantment.getKey().toString().replace("minecraft:", ""));
-            }
+            completions.addAll(allEnchantments(mainHandItem));
+        } else if (args.length == 3
+                && mainHandItem.getItemMeta().hasEnchants()
+                && Utils.getEnchantmentValue(args[1]) != null
+                && mainHandItem.getItemMeta().hasEnchant(Utils.getEnchantmentValue(args[1]))) {
+            completions.add("remove");
+            completions.add(String.valueOf(mainHandItem.getItemMeta().getEnchantLevel(Utils.getEnchantmentValue(args[1]))));
         }
+    }
+
+    private static List<String> itemEnchantments(ItemStack mainHandItem) {
+        if (!mainHandItem.getItemMeta().hasEnchants()) {
+            return Collections.emptyList();
+        }
+        List<String> enchantments = new ArrayList<>();
+        for (Enchantment enchantment : mainHandItem.getEnchantments().keySet()) {
+            enchantments.add(enchantment.getKey().toString().toUpperCase().replace("MINECRAFT:", ""));
+        }
+        return enchantments;
+    }
+
+    private static List<String> allEnchantments(ItemStack mainHandItem) {
+        List<String> enchantments = new ArrayList<>();
+        for (Enchantment enchantment : Enchantment.values()) {
+            if (mainHandItem.containsEnchantment(enchantment)) {
+                continue;
+            }
+            enchantments.add(enchantment.getKey().toString().toUpperCase().replace("MINECRAFT:", ""));
+        }
+        return enchantments;
     }
 
 }

@@ -3,12 +3,11 @@ package it.giopav.itemsage.command.namehandler;
 import it.giopav.itemsage.Utils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-
-import static it.giopav.itemsage.Utils.deserializeRightString;
 
 public class NameExecutor {
 
@@ -35,11 +34,8 @@ public class NameExecutor {
             return false;
         }
 
-        String serializedName = Utils.serializeRightString(mainHandItem.getItemMeta().displayName());
         player.sendMessage(ChatColor.GREEN + "The item's name is:");
-        player.sendMessage(deserializeRightString(serializedName)
-                .hoverEvent(Component.text(ChatColor.WHITE + "» Click to copy «"))
-                .clickEvent(ClickEvent.copyToClipboard(serializedName)));
+        player.sendMessage(nameHoverClickMessage(mainHandItem.getItemMeta().displayName()));
         return true;
     }
 
@@ -53,16 +49,26 @@ public class NameExecutor {
         for (int i = 2; i < args.length; i++) {
             nameBuilder.append(args[i]).append(" ");
         }
-        String nameString = nameBuilder.toString().trim();
-        Component deserializedName = deserializeRightString(ChatColor.RESET + nameString);
-        ItemMeta mainHandItemMeta = mainHandItem.getItemMeta();
-        mainHandItemMeta.displayName(deserializedName);
-        mainHandItem.setItemMeta(mainHandItemMeta);
+        Component deserializedName = Utils.deserializeRightString(nameBuilder.toString().trim())
+                .decoration(TextDecoration.ITALIC, false);
+
+        mainHandItem.setItemMeta(itemMetaWithName(mainHandItem, deserializedName));
         player.sendMessage(ChatColor.GREEN + "The display name has been set to:");
-        player.sendMessage(deserializedName
-                .hoverEvent(Component.text(ChatColor.WHITE + "» Click to copy «"))
-                .clickEvent(ClickEvent.copyToClipboard(nameString)));
+        player.sendMessage(nameHoverClickMessage(deserializedName));
         return true;
+    }
+
+    private static ItemMeta itemMetaWithName(ItemStack mainHandItem, Component displayName) {
+        ItemMeta mainHandItemMeta = mainHandItem.getItemMeta();
+        mainHandItemMeta.displayName(displayName);
+        return mainHandItemMeta;
+    }
+
+    private static Component nameHoverClickMessage(Component displayName) {
+        String nameString = Utils.serializeRightString(displayName);
+        return Utils.deserializeRightString(nameString).decoration(TextDecoration.ITALIC, false)
+                .hoverEvent(Component.text(ChatColor.WHITE + "» Click to copy «"))
+                .clickEvent(ClickEvent.copyToClipboard(nameString));
     }
 
 }

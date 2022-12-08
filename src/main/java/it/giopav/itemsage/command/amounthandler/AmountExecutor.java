@@ -29,7 +29,7 @@ public class AmountExecutor {
 
     private static boolean sendAmount(Player player, ItemStack mainHandItem) {
         int amount = mainHandItem.getAmount();
-        player.sendMessage(ChatColor.GREEN + "The item's amount has been set to:");
+        player.sendMessage(ChatColor.GREEN + "The item's amount is:");
         player.sendMessage(Component.text(amount)
                 .hoverEvent(Component.text(ChatColor.WHITE + "» Click to copy «"))
                 .clickEvent(ClickEvent.copyToClipboard(String.valueOf(amount))));

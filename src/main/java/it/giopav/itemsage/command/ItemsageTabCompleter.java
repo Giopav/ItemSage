@@ -23,7 +23,7 @@ import java.util.List;
 public class ItemsageTabCompleter implements TabCompleter {
 
     // TabCompletes for args.length == 1 with help, name, lore, enchant, attribute, flag, amount, and material.
-    // For args.length > 1 it calls the respective class and method, if there is none it just returns null.
+    // For args.length > 1 it calls the respective class and methods, if there is none it just returns null.
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (!(sender instanceof Player)) {

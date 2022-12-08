@@ -27,7 +27,7 @@ public class ItemsageExecutor implements CommandExecutor {
                 case "help":
                     return Help.command(player);
                 case "lore":
-                    return LoreExecutor.command(player, args); //TODO check for negative lore lines
+                    return LoreExecutor.command(player, args);
                 case "enchant":
                     return EnchantExecutor.command(player, args);
                 case "attribute":
@@ -41,6 +41,9 @@ public class ItemsageExecutor implements CommandExecutor {
                     return AmountExecutor.command(player, args);
                 case "material":
                     return MaterialExecutor.command(player, args);
+                case "durability":
+                    //TODO use "Damageable", as not every item can be damaged (not all items have durability).
+                    return true;
                 default:
                     player.sendMessage(ChatColor.RED + "I don't recognize the argument.");
                     return false;
