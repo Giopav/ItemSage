@@ -5,6 +5,7 @@ import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemFlag;
@@ -85,4 +86,16 @@ public class Utils {
         }
         return itemFlag;
     }
+
+    public static AttributeModifier.Operation getOperationValue(String string) {
+        AttributeModifier.Operation operation = null;
+        for (AttributeModifier.Operation operationElement : AttributeModifier.Operation.values()) {
+            if (operationElement.toString().equals(string)) {
+                operation = operationElement;
+                break;
+            }
+        }
+        return operation;
+    }
+
 }

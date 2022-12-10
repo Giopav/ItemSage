@@ -44,6 +44,9 @@ public class ItemsageExecutor implements CommandExecutor {
                 case "durability":
                     //TODO use "Damageable", as not every item can be damaged (not all items have durability).
                     return true;
+                case "lavabreakable":
+                    //TODO like the netherite stuff.
+                    return true;
                 default:
                     player.sendMessage(ChatColor.RED + "I don't recognize the argument.");
                     return false;

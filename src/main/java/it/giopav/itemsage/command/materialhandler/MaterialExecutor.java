@@ -29,7 +29,7 @@ public class MaterialExecutor {
     private static boolean sendMaterial(Player player, ItemStack mainHandItem) {
         Material material = mainHandItem.getType();
         player.sendMessage(ChatColor.GREEN + "The item's material is:");
-        player.sendMessage(materialHoverClickMessage(material));
+        player.sendMessage(materialMessage(material));
         return true;
     }
 
@@ -48,11 +48,11 @@ public class MaterialExecutor {
         assert material != null;
         mainHandItem.setType(material);
         player.sendMessage(ChatColor.GREEN + "The item's material has been set to:");
-        player.sendMessage(materialHoverClickMessage(material));
+        player.sendMessage(materialMessage(material));
         return true;
     }
 
-    private static Component materialHoverClickMessage(Material material) {
+    private static Component materialMessage(Material material) {
         String materialString = material.toString().toUpperCase().replaceFirst("MINECRAFT:", "");
         return Component.text(materialString)
                 .hoverEvent(Component.text(ChatColor.WHITE + "» Click to copy «"))

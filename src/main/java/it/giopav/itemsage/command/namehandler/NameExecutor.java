@@ -35,7 +35,7 @@ public class NameExecutor {
         }
 
         player.sendMessage(ChatColor.GREEN + "The item's name is:");
-        player.sendMessage(nameHoverClickMessage(mainHandItem.getItemMeta().displayName()));
+        player.sendMessage(nameMessage(mainHandItem.getItemMeta().displayName()));
         return true;
     }
 
@@ -54,7 +54,7 @@ public class NameExecutor {
 
         mainHandItem.setItemMeta(itemMetaWithName(mainHandItem, deserializedName));
         player.sendMessage(ChatColor.GREEN + "The display name has been set to:");
-        player.sendMessage(nameHoverClickMessage(deserializedName));
+        player.sendMessage(nameMessage(deserializedName));
         return true;
     }
 
@@ -64,7 +64,7 @@ public class NameExecutor {
         return mainHandItemMeta;
     }
 
-    private static Component nameHoverClickMessage(Component displayName) {
+    private static Component nameMessage(Component displayName) {
         String nameString = Utils.serializeRightString(displayName);
         return Utils.deserializeRightString(nameString).decoration(TextDecoration.ITALIC, false)
                 .hoverEvent(Component.text(ChatColor.WHITE + "» Click to copy «"))

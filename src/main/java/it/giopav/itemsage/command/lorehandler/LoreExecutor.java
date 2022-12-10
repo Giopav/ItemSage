@@ -28,7 +28,7 @@ public class LoreExecutor {
         } else if (args.length == 2) {
             return sendLine(player, args, mainHandItem);
         } else if (args.length >= 3) {
-            return redirect(player, args, mainHandItem);
+            return redirectAddOrEdit(player, args, mainHandItem);
         }
 
         player.sendMessage(ChatColor.RED + "This command doesn't work like this.");
@@ -40,12 +40,13 @@ public class LoreExecutor {
             player.sendMessage(ChatColor.RED + "This item doesn't have a lore.");
             return false;
         }
+
         List<Component> lore = mainHandItem.getItemMeta().lore();
         assert lore != null;
         player.sendMessage(ChatColor.GREEN + "The lore is:");
         for (int i = 0; i < lore.size(); i++) {
             player.sendMessage(Component.text(ChatColor.GRAY + String.valueOf(i+1) + ") " + ChatColor.RESET)
-                    .append(lineHoverClickMessage(lore.get(i))));
+                    .append(lineMessage(lore.get(i))));
         }
         return true;
     }
@@ -65,24 +66,27 @@ public class LoreExecutor {
             player.sendMessage(ChatColor.RED + "You have to enter a valid lore line.");
             return false;
         }
-        if (args[1].equals("0")) {
+        int lineIndex = Integer.parseInt(args[1]);
+        if (lineIndex == 0) {
             player.sendMessage(ChatColor.RED + "The first valid lore line is 1.");
             return false;
         }
-        if (Objects.requireNonNull(mainHandItem.getItemMeta().lore()).size() <= Integer.parseInt(args[1])-1) {
-            player.sendMessage(ChatColor.RED + "This item does not reach line " + args[1] + ".");
+        List<Component> lore = mainHandItem.getItemMeta().lore();
+        assert lore != null;
+        if (lore.size() <= lineIndex-1) {
+            player.sendMessage(ChatColor.RED + "This item does not reach line " + lineIndex + ".");
             return false;
         }
 
         player.sendMessage(ChatColor.GREEN + "The selected line is:");
-        Component line = Objects.requireNonNull(mainHandItem.getItemMeta().lore()).get(Integer.parseInt(args[1])-1);
-        player.sendMessage(lineHoverClickMessage(line));
+        Component line = lore.get(lineIndex-1);
+        player.sendMessage(lineMessage(line));
         return true;
     }
 
     // Returns true or false, depending on whether the command succeeds or not.
     // Called if the arguments are 3 or more.
-    private static boolean redirect(Player player, String[] args, ItemStack mainHandItem) {
+    private static boolean redirectAddOrEdit(Player player, String[] args, ItemStack mainHandItem) {
         if (args[1].equalsIgnoreCase("add")) {
             return addLine(player, args, mainHandItem);
         } else if (Pattern.matches("\\d+", args[1])) {
@@ -99,7 +103,7 @@ public class LoreExecutor {
         String lineString = stringFromArray(args);
         mainHandItem.setItemMeta(addLoreLine(mainHandItem.getItemMeta(), lineString));
         player.sendMessage(ChatColor.GREEN + "The lore line has been added:");
-        player.sendMessage(lineHoverClickMessage(Utils.deserializeRightString(lineString)));
+        player.sendMessage(lineMessage(Utils.deserializeRightString(lineString)));
         return true;
     }
 
@@ -112,7 +116,7 @@ public class LoreExecutor {
         }
         int lineIndex = Integer.parseInt(args[1]);
         if (lineIndex == 0) {
-            player.sendMessage(ChatColor.RED + "The first valid lore line is \"1\".");
+            player.sendMessage(ChatColor.RED + "The first valid lore line is 1.");
             return false;
         }
         if (Objects.requireNonNull(mainHandItem.getItemMeta().lore()).size() <= lineIndex-1) {
@@ -130,12 +134,12 @@ public class LoreExecutor {
             assert lore != null;
             mainHandItem.setItemMeta(removeLoreLine(mainHandItem.getItemMeta(), lineIndex-1));
             player.sendMessage(ChatColor.GREEN + "The lore line " + lineIndex + " has been removed:");
-            player.sendMessage(lineHoverClickMessage(lore.get(lineIndex)));
+            player.sendMessage(lineMessage(lore.get(lineIndex-1)));
         } else {
             String line = stringFromArray(args);
             mainHandItem.setItemMeta(setLoreLine(mainHandItem.getItemMeta(), line, lineIndex-1));
             player.sendMessage(ChatColor.GREEN + "The lore line " + lineIndex + " has been set to:");
-            player.sendMessage(lineHoverClickMessage(Utils.deserializeRightString(line)));
+            player.sendMessage(lineMessage(Utils.deserializeRightString(line)));
         }
         return true;
     }
@@ -184,7 +188,7 @@ public class LoreExecutor {
         return stringBuilder.toString().trim();
     }
 
-    private static Component lineHoverClickMessage(Component line) {
+    private static Component lineMessage(Component line) {
         String lineString = Utils.serializeRightString(line);
         return line
                 .hoverEvent(Component.text(ChatColor.WHITE + "» Click to copy «"))
