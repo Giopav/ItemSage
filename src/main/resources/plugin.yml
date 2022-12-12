@@ -7,5 +7,5 @@ description: The Item Sage helps you get a glimpse of everything.
 commands:
   itemsage:
     description: Your description
-    usage: §cType /<command> help if you are having problems.
+    usage: §cType "/<command> help" if you are having problems.
     permission: itemsage.command

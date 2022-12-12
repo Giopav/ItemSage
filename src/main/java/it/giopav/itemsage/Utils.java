@@ -98,4 +98,15 @@ public class Utils {
         return operation;
     }
 
+    public static String userFriendlyString(String string) {
+        StringBuilder userFriendly = new StringBuilder();
+        for (String substring : string.split(" ")) {
+            userFriendly
+                    .append(substring.substring(0, 1).toUpperCase())
+                    .append(substring.substring(1))
+                    .append(" ");
+        }
+        return userFriendly.toString().trim();
+    }
+
 }

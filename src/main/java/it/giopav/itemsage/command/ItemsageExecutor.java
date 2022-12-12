@@ -3,6 +3,7 @@ package it.giopav.itemsage.command;
 import it.giopav.itemsage.command.amounthandler.AmountExecutor;
 import it.giopav.itemsage.command.attributehandler.AttributeExecutor;
 import it.giopav.itemsage.command.enchanthandler.EnchantExecutor;
+import it.giopav.itemsage.command.flaghandler.FlagExecutor;
 import it.giopav.itemsage.command.lorehandler.LoreExecutor;
 import it.giopav.itemsage.command.materialhandler.MaterialExecutor;
 import it.giopav.itemsage.command.namehandler.NameExecutor;
@@ -24,28 +25,33 @@ public class ItemsageExecutor implements CommandExecutor {
         Player player = (Player) sender;
         if (args.length > 0) {
             switch (args[0].toLowerCase()) {
+                case "amount":
+                    return AmountExecutor.command(player, args);
+                case "attribute":
+                    return AttributeExecutor.command(player, args);
+                case "data":
+                    // TODO dataContainer
+                    return true;
+                case "durability":
+                    // TODO use "Damageable", as not every item can be damaged (not all items have durability).
+                    return true;
+                case "enchant":
+                    return EnchantExecutor.command(player, args);
+                case "fireproof":
+                    player.sendMessage(ChatColor.RED + "Ok, I'm a sage, but not THAT kind of sage!");
+                    return true;
+                case "flag":
+                    return FlagExecutor.command(player, args);
                 case "help":
                     return Help.command(player);
                 case "lore":
                     return LoreExecutor.command(player, args);
-                case "enchant":
-                    return EnchantExecutor.command(player, args);
-                case "attribute":
-                    return AttributeExecutor.command(player, args);
-                case "flag":
-                    //TODO
-                    return true;
-                case "name":
-                    return NameExecutor.command(player, args);
-                case "amount":
-                    return AmountExecutor.command(player, args);
                 case "material":
                     return MaterialExecutor.command(player, args);
-                case "durability":
-                    //TODO use "Damageable", as not every item can be damaged (not all items have durability).
-                    return true;
-                case "lavabreakable":
-                    //TODO like the netherite stuff.
+                case "name":
+                    return NameExecutor.command(player, args);
+                case "unbreakable":
+                    // TODO
                     return true;
                 default:
                     player.sendMessage(ChatColor.RED + "I don't recognize the argument.");

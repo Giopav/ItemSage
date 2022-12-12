@@ -243,23 +243,11 @@ public class AttributeExecutor {
         }
     }
 
-    private static String userFriendlyAttributeName(Attribute attribute) {
-        String attributeString = attribute.getKey().toString().split("\\.")[1];
-        StringBuilder userFriendly = new StringBuilder();
-        for (String substring : attributeString.split("_")) {
-            userFriendly
-                    .append(substring.substring(0, 1).toUpperCase())
-                    .append(substring.substring(1))
-                    .append(" ");
-        }
-        return userFriendly.toString().trim();
-    }
-
     private static Component attributeMessage(Attribute attribute, AttributeModifier attributeModifier) {
         double modifierAmount = attributeModifier.getAmount();
         String attributeUserFriendly = (modifierAmount < 0 ? "-" : "") +
                 (attributeModifier.getOperation() != AttributeModifier.Operation.ADD_NUMBER ? modifierAmount*100 : modifierAmount) +
-                " " + userFriendlyAttributeName(attribute);
+                " " + Utils.userFriendlyString(attribute.getKey().toString().split("\\.")[1].replace("_", " "));
         String attributeString = attribute + " " +
                 (modifierAmount < 0 ? "-" : "") + modifierAmount
                 + " " + attributeModifier.getOperation();
