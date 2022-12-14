@@ -2,6 +2,7 @@ package it.giopav.itemsage.command;
 
 import it.giopav.itemsage.command.amounthandler.AmountExecutor;
 import it.giopav.itemsage.command.attributehandler.AttributeExecutor;
+import it.giopav.itemsage.command.durabilityhandler.DurabilityExecutor;
 import it.giopav.itemsage.command.enchanthandler.EnchantExecutor;
 import it.giopav.itemsage.command.flaghandler.FlagExecutor;
 import it.giopav.itemsage.command.lorehandler.LoreExecutor;
@@ -33,8 +34,7 @@ public class ItemsageExecutor implements CommandExecutor {
                     // TODO dataContainer
                     return true;
                 case "durability":
-                    // TODO use "Damageable", as not every item can be damaged (not all items have durability).
-                    return true;
+                    return DurabilityExecutor.command(player, args);
                 case "enchant":
                     return EnchantExecutor.command(player, args);
                 case "fireproof":

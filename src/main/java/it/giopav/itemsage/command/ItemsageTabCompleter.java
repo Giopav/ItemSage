@@ -2,6 +2,7 @@ package it.giopav.itemsage.command;
 
 import it.giopav.itemsage.command.amounthandler.AmountTabCompleter;
 import it.giopav.itemsage.command.attributehandler.AttributeTabCompleter;
+import it.giopav.itemsage.command.durabilityhandler.DurabilityTabCompleter;
 import it.giopav.itemsage.command.enchanthandler.EnchantTabCompleter;
 import it.giopav.itemsage.command.flaghandler.FlagTabCompleter;
 import it.giopav.itemsage.command.lorehandler.LoreTabCompleter;
@@ -41,36 +42,52 @@ public class ItemsageTabCompleter implements TabCompleter {
         if (player.getEquipment().getItemInMainHand().getType().isAir()) {
             completions.add("help");
         } else if (args.length == 1) {
-            completions.add("help");
-            completions.add("name");
-            completions.add("lore");
-            completions.add("enchant");
-            completions.add("attribute");
-            completions.add("flag");
             completions.add("amount");
+            completions.add("attribute");
+            completions.add("data"); //TODO
+            completions.add("durability");
+            completions.add("enchant");
+            completions.add("fireproof"); //TODO
+            completions.add("flag");
+            completions.add("help");
+            completions.add("lore");
             completions.add("material");
+            completions.add("name");
+            completions.add("unbreakable"); //TODO
         } else if (args.length > 1) {
             switch (args[0]) {
-                case "name":
-                    NameTabCompleter.tabComplete(completions, mainHandItem, args);
-                    break;
-                case "lore":
-                    LoreTabCompleter.tabComplete(completions, mainHandItem, args);
-                    break;
-                case "enchant":
-                    EnchantTabCompleter.tabComplete(completions, mainHandItem, args);
+                case "amount":
+                    AmountTabCompleter.tabComplete(completions, mainHandItem, args);
                     break;
                 case "attribute":
                     AttributeTabCompleter.tabComplete(completions, mainHandItem, args);
                     break;
+                case "data":
+                    //TODO data
+                    break;
+                case "durability":
+                    DurabilityTabCompleter.tabComplete(completions, mainHandItem, args);
+                    break;
+                case "enchant":
+                    EnchantTabCompleter.tabComplete(completions, mainHandItem, args);
+                    break;
+                case "fireproof":
+                    //TODO fireproof
+                    break;
                 case "flag":
                     FlagTabCompleter.tabComplete(completions, mainHandItem, args);
                     break;
-                case "amount":
-                    AmountTabCompleter.tabComplete(completions, mainHandItem, args);
+                case "lore":
+                    LoreTabCompleter.tabComplete(completions, mainHandItem, args);
                     break;
                 case "material":
                     MaterialTabCompleter.tabComplete(completions, mainHandItem, args);
+                    break;
+                case "name":
+                    NameTabCompleter.tabComplete(completions, mainHandItem, args);
+                    break;
+                case "unbreakable":
+                    //TODO unbreakable
                     break;
                 default:
             }

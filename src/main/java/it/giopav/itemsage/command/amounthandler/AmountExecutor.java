@@ -49,7 +49,7 @@ public class AmountExecutor {
             return false;
         }
         if (amount > mainHandItem.getType().getMaxStackSize()) {
-            player.sendMessage(ChatColor.RED + "The amount can't be bigger than " + mainHandItem.getType().getMaxStackSize() + ".");
+            player.sendMessage(ChatColor.RED + "The amount can't be higher than " + mainHandItem.getType().getMaxStackSize() + ".");
             return false;
         }
 
