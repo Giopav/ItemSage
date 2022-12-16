@@ -2,9 +2,7 @@
 
 ## Supported Versions
 
-The version that receives constant updates is always the last one.
-
-You can find the latest version in the [pom.xml](pom.xml) file.
+The version that receives constant updates is always the [latest](https://github.com/Giopav/ItemSage/releases).
 
 ## Reporting a Vulnerability
 
