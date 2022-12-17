@@ -8,6 +8,7 @@ import it.giopav.itemsage.command.flaghandler.FlagExecutor;
 import it.giopav.itemsage.command.lorehandler.LoreExecutor;
 import it.giopav.itemsage.command.materialhandler.MaterialExecutor;
 import it.giopav.itemsage.command.namehandler.NameExecutor;
+import it.giopav.itemsage.command.unbreakablehandler.UnbreakableExecutor;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -23,6 +24,7 @@ public class ItemsageExecutor implements CommandExecutor {
             sender.sendMessage(ChatColor.RED + "The command can only be executed via game.");
             return false;
         }
+
         Player player = (Player) sender;
         if (args.length > 0) {
             switch (args[0].toLowerCase()) {
@@ -37,9 +39,6 @@ public class ItemsageExecutor implements CommandExecutor {
                     return DurabilityExecutor.command(player, args);
                 case "enchant":
                     return EnchantExecutor.command(player, args);
-                case "fireproof":
-                    player.sendMessage(ChatColor.RED + "Ok, I'm a sage, but not THAT kind of sage!");
-                    return true;
                 case "flag":
                     return FlagExecutor.command(player, args);
                 case "help":
@@ -51,8 +50,7 @@ public class ItemsageExecutor implements CommandExecutor {
                 case "name":
                     return NameExecutor.command(player, args);
                 case "unbreakable":
-                    // TODO
-                    return true;
+                    return UnbreakableExecutor.command(player, args);
                 default:
                     player.sendMessage(ChatColor.RED + "I don't recognize the argument.");
                     return false;

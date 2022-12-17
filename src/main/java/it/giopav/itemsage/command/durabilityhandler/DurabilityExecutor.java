@@ -44,10 +44,6 @@ public class DurabilityExecutor {
             player.sendMessage(ChatColor.RED + "This command doesn't work like this.");
             return false;
         }
-        int maxDurability = mainHandItem.getType().getMaxDurability();
-        if (args[2].equalsIgnoreCase("max")) {
-            args[2] = String.valueOf(maxDurability);
-        }
         if (!Pattern.matches("\\d+", args[2])) {
             player.sendMessage(ChatColor.RED + "You have to input a number.");
             return false;
@@ -57,6 +53,7 @@ public class DurabilityExecutor {
             player.sendMessage(ChatColor.RED + "The durability can't be lower than 1.");
             return false;
         }
+        int maxDurability = mainHandItem.getType().getMaxDurability();
         if (durability > maxDurability) {
             player.sendMessage(ChatColor.RED + "The durability for this item can't be higher than " + maxDurability + ".");
             return false;

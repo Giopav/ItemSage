@@ -8,6 +8,7 @@ import it.giopav.itemsage.command.flaghandler.FlagTabCompleter;
 import it.giopav.itemsage.command.lorehandler.LoreTabCompleter;
 import it.giopav.itemsage.command.materialhandler.MaterialTabCompleter;
 import it.giopav.itemsage.command.namehandler.NameTabCompleter;
+import it.giopav.itemsage.command.unbreakablehandler.UnbreakableTabCompleter;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -47,13 +48,12 @@ public class ItemsageTabCompleter implements TabCompleter {
             completions.add("data"); //TODO
             completions.add("durability");
             completions.add("enchant");
-            completions.add("fireproof"); //TODO
             completions.add("flag");
             completions.add("help");
             completions.add("lore");
             completions.add("material");
             completions.add("name");
-            completions.add("unbreakable"); //TODO
+            completions.add("unbreakable");
         } else if (args.length > 1) {
             switch (args[0]) {
                 case "amount":
@@ -71,9 +71,6 @@ public class ItemsageTabCompleter implements TabCompleter {
                 case "enchant":
                     EnchantTabCompleter.tabComplete(completions, mainHandItem, args);
                     break;
-                case "fireproof":
-                    //TODO fireproof
-                    break;
                 case "flag":
                     FlagTabCompleter.tabComplete(completions, mainHandItem, args);
                     break;
@@ -87,7 +84,7 @@ public class ItemsageTabCompleter implements TabCompleter {
                     NameTabCompleter.tabComplete(completions, mainHandItem, args);
                     break;
                 case "unbreakable":
-                    //TODO unbreakable
+                    UnbreakableTabCompleter.tabComplete(completions, mainHandItem, args);
                     break;
                 default:
             }

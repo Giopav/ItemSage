@@ -23,7 +23,7 @@ public class AttributeTabCompleter {
         } else if (args.length == 4
                 && Utils.getEquipmentSlotValue(args[1]) != null
                 && args[2].equalsIgnoreCase("add")) {
-            completions.addAll(allAttributes());
+            completions.addAll(allAttributes(mainHandItem, Utils.getEquipmentSlotValue(args[1])));
         } else if (args.length == 4
                 && Utils.getEquipmentSlotValue(args[1]) != null
                 && !args[2].equalsIgnoreCase("add")
@@ -59,9 +59,12 @@ public class AttributeTabCompleter {
         return attributes;
     }
 
-    private static List<String> allAttributes() {
+    private static List<String> allAttributes(ItemStack mainHandItem, EquipmentSlot slot) {
         List<String> attributes = new ArrayList<>();
         for (Attribute attribute : Attribute.values()) {
+            if (mainHandItem.getItemMeta().getAttributeModifiers(slot).containsKey(attribute)) {
+                continue;
+            }
             attributes.add(attribute.toString());
         }
         return attributes;
