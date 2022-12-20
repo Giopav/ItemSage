@@ -42,8 +42,12 @@ public class EnchantExecutor {
             return false;
         }
 
-        player.sendMessage(ChatColor.GREEN + "The enchantments are:");
         Map<Enchantment, Integer> enchantments = mainHandItem.getEnchantments();
+        if (enchantments.size() == 1) {
+            player.sendMessage(ChatColor.GREEN + "The enchantment is:");
+        } else {
+            player.sendMessage(ChatColor.GREEN + "The enchantments are:");
+        }
         for (int i = 0; i < enchantments.size(); i++) {
             Enchantment enchantment = (Enchantment) enchantments.keySet().toArray()[i];
             player.sendMessage(Component.text(ChatColor.GRAY + String.valueOf(i+1) + ") " + ChatColor.AQUA)

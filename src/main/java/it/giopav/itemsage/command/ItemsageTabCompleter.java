@@ -2,6 +2,7 @@ package it.giopav.itemsage.command;
 
 import it.giopav.itemsage.command.amounthandler.AmountTabCompleter;
 import it.giopav.itemsage.command.attributehandler.AttributeTabCompleter;
+import it.giopav.itemsage.command.datahandler.DataTabCompleter;
 import it.giopav.itemsage.command.durabilityhandler.DurabilityTabCompleter;
 import it.giopav.itemsage.command.enchanthandler.EnchantTabCompleter;
 import it.giopav.itemsage.command.flaghandler.FlagTabCompleter;
@@ -45,7 +46,7 @@ public class ItemsageTabCompleter implements TabCompleter {
         } else if (args.length == 1) {
             completions.add("amount");
             completions.add("attribute");
-            completions.add("data"); //TODO
+            completions.add("data");
             completions.add("durability");
             completions.add("enchant");
             completions.add("flag");
@@ -63,7 +64,7 @@ public class ItemsageTabCompleter implements TabCompleter {
                     AttributeTabCompleter.tabComplete(completions, mainHandItem, args);
                     break;
                 case "data":
-                    //TODO data
+                    DataTabCompleter.tabComplete(completions, mainHandItem, args);
                     break;
                 case "durability":
                     DurabilityTabCompleter.tabComplete(completions, mainHandItem, args);
@@ -84,7 +85,7 @@ public class ItemsageTabCompleter implements TabCompleter {
                     NameTabCompleter.tabComplete(completions, mainHandItem, args);
                     break;
                 case "unbreakable":
-                    UnbreakableTabCompleter.tabComplete(completions, mainHandItem, args);
+                    UnbreakableTabCompleter.tabComplete(completions, args);
                     break;
                 default:
             }
