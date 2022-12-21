@@ -89,7 +89,6 @@ Also: the help command just displays the commands already found here.
 ## Support
 
 You're having some issues with the plugin?\
-
 Reach out to me via:
 - Email (giopav012@gmail.com)
 - Telegram (@Giopav)
