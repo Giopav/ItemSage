@@ -286,4 +286,5 @@ graph LR;
 You're having some issues with the plugin?\
 Reach out to me via:
 - Email (giopav012@gmail.com)
-- Telegram (@Giopav)
+- Telegram ([@Giopav](https://t.me/Giopav))
+- [Discord](https://discord.gg/yVV6m6V)
