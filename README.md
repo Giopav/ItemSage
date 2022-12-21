@@ -5,6 +5,8 @@ he would not talk, and that may be.\
 But if a glimpse you want to take,\
 a set of rules you shall not break."
 
+A simple way to modify anything about your items!
+
 To interact with the ItemSage you will need to learn its commands.
 
 ## Commands
