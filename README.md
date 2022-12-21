@@ -244,9 +244,19 @@ graph LR;
 </details>
 
 ### 🔧 Help
-| Command          | Action                       |
-|:-----------------|:-----------------------------|
-| `/itemsage help` | Display a general help menu. |
+| Command                      | Action                             |
+|:-----------------------------|:-----------------------------------|
+| `/itemsage help`             | Display the general help menu.     |
+| `/itemsage help amount`      | Display the amount help menu.      |
+| `/itemsage help attribute`   | Display the attribute help menu.   |
+| `/itemsage help data`        | Display the data help menu.        |
+| `/itemsage help durability`  | Display the durability help menu.  |
+| `/itemsage help enchant`     | Display the enchant help menu.     |
+| `/itemsage help flag`        | Display the flag help menu.        |
+| `/itemsage help lore`        | Display the lore help menu.        |
+| `/itemsage help material`    | Display the material help menu.    |
+| `/itemsage help name`        | Display the name help menu.        |
+| `/itemsage help unbreakable` | Display the unbreakable help menu. |
 
 Also: the help command just displays the commands already found here.
 
@@ -257,6 +267,16 @@ Also: the help command just displays the commands already found here.
 graph LR;
     a[itemsage];
     a-->b[[help]];
+    b-->c[[amount]];
+    b-->d[[attribute]];
+    b-->e[[data]];
+    b-->f[[durability]];
+    b-->g[[enchant]];
+    b-->h[[flag]];
+    b-->i[[lore]];
+    b-->j[[material]];
+    b-->k[[name]];
+    b-->l[[unbreakable]];
 ```
 
 </details>
