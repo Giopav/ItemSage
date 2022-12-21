@@ -24,7 +24,7 @@ public class DataExecutor {
             return removeData(player, mainHandItem, args);
         }
 
-        player.sendMessage(ChatColor.RED + "You can only see the data inside of an item, you can't modify it!");
+        player.sendMessage(ChatColor.RED + "This command doesn't work like this.");
         return false;
     }
 
