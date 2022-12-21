@@ -6,6 +6,7 @@ import it.giopav.itemsage.command.datahandler.DataExecutor;
 import it.giopav.itemsage.command.durabilityhandler.DurabilityExecutor;
 import it.giopav.itemsage.command.enchanthandler.EnchantExecutor;
 import it.giopav.itemsage.command.flaghandler.FlagExecutor;
+import it.giopav.itemsage.command.helphandler.HelpExecutor;
 import it.giopav.itemsage.command.lorehandler.LoreExecutor;
 import it.giopav.itemsage.command.materialhandler.MaterialExecutor;
 import it.giopav.itemsage.command.namehandler.NameExecutor;
@@ -42,7 +43,7 @@ public class ItemsageExecutor implements CommandExecutor {
                 case "flag":
                     return FlagExecutor.command(player, args);
                 case "help":
-                    return Help.command(player);
+                    return HelpExecutor.command(player, args);
                 case "lore":
                     return LoreExecutor.command(player, args);
                 case "material":

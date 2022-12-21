@@ -52,13 +52,13 @@ public class DataExecutor {
         NamespacedKey key = NamespacedKey.fromString(args[2]);
         assert key != null;
         if (!dataContainer.has(key)) {
-            player.sendMessage(ChatColor.RED + "The item doesn't contain the key \"" + key + "\"!");
+            player.sendMessage(ChatColor.RED + "This item doesn't contain the key \"" + key + "\"!");
             return false;
         }
 
         dataContainer.remove(key);
         mainHandItem.setItemMeta(mainHandItemMeta);
-        player.sendMessage(ChatColor.RED + "The following key has been removed from the item:");
+        player.sendMessage(ChatColor.RED + "The following key has been removed from this item:");
         player.sendMessage(dataMessage(key));
         return true;
     }

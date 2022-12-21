@@ -39,13 +39,9 @@ public class AttributeExecutor {
         return false;
     }
 
-    // For every equipment slot:
-    //     For every attribute in that slot:
-    //         For every modifier of that attribute:
-    //             Send it in chat!
     private static boolean sendAllAttributes(Player player, ItemStack mainHandItem) {
         if (!mainHandItem.getItemMeta().hasAttributeModifiers()) {
-            player.sendMessage(ChatColor.RED + "The item does not contain attributes.");
+            player.sendMessage(ChatColor.RED + "This item doesn't contain attributes.");
             return false;
         }
 
@@ -72,17 +68,17 @@ public class AttributeExecutor {
     private static boolean sendSlotAttributes(Player player, String[] args, ItemStack mainHandItem) {
         args[1] = args[1].toUpperCase();
         if (!mainHandItem.getItemMeta().hasAttributeModifiers()) {
-            player.sendMessage(ChatColor.RED + "The item does not contain attributes.");
+            player.sendMessage(ChatColor.RED + "This item doesn't contain attributes.");
             return false;
         }
         EquipmentSlot equipmentSlot = Utils.getEquipmentSlotValue(args[1]);
         if (equipmentSlot == null) {
-            player.sendMessage(ChatColor.RED + "The equipment slot \"" + args[1] + "\" does not exist.");
+            player.sendMessage(ChatColor.RED + "The equipment slot \"" + args[1] + "\" doesn't exist.");
             return false;
         }
         Multimap<Attribute, AttributeModifier> attributeModifierMultimap = mainHandItem.getItemMeta().getAttributeModifiers(equipmentSlot);
         if (attributeModifierMultimap.isEmpty()) {
-            player.sendMessage(ChatColor.RED + "The equipment slot \"" + args[1] + "\" does not contain attributes.");
+            player.sendMessage(ChatColor.RED + "The equipment slot \"" + args[1] + "\" doesn't contain attributes.");
             return false;
         }
 
@@ -107,25 +103,25 @@ public class AttributeExecutor {
         }
         args[1] = args[1].toUpperCase();
         if (!mainHandItem.getItemMeta().hasAttributeModifiers()) {
-            player.sendMessage(ChatColor.RED + "The item does not contain attributes.");
+            player.sendMessage(ChatColor.RED + "This item doesn't contain attributes.");
             return false;
         }
         EquipmentSlot equipmentSlot = Utils.getEquipmentSlotValue(args[1]);
         if (equipmentSlot == null) {
-            player.sendMessage(ChatColor.RED + "The equipment slot \"" + args[1] + "\" does not exist.");
+            player.sendMessage(ChatColor.RED + "The equipment slot \"" + args[1] + "\" doesn't exist.");
             return false;
         }
         if (mainHandItem.getItemMeta().getAttributeModifiers(equipmentSlot).isEmpty()) {
-            player.sendMessage(ChatColor.RED + "The equipment slot \"" + equipmentSlot + "\" does not contain attributes.");
+            player.sendMessage(ChatColor.RED + "The equipment slot \"" + equipmentSlot + "\" doesn't contain attributes.");
             return false;
         }
         Attribute attribute = Utils.getAttributeValue(args[2]);
         if (attribute == null) {
-            player.sendMessage(ChatColor.RED + "The attribute \"" + args[2] + "\" does not exist.");
+            player.sendMessage(ChatColor.RED + "The attribute \"" + args[2] + "\" doesn't exist.");
             return false;
         }
         if (!mainHandItem.getItemMeta().getAttributeModifiers(equipmentSlot).containsKey(attribute)) {
-            player.sendMessage(ChatColor.RED + "The equipment slot \"" + args[1] + "\" does not contain the attribute " + attribute + ".");
+            player.sendMessage(ChatColor.RED + "The equipment slot \"" + args[1] + "\" doesn't contain the attribute " + attribute + ".");
             return false;
         }
 
@@ -196,7 +192,7 @@ public class AttributeExecutor {
                 new AttributeModifier(UUID.randomUUID(), attribute.toString(), amount, operation, slot);
         mainHandItemMeta.addAttributeModifier(attribute, attributeModifier);
         mainHandItem.setItemMeta(mainHandItemMeta);
-        player.sendMessage(ChatColor.GREEN + "The attribute has been added to the item:");
+        player.sendMessage(ChatColor.GREEN + "The attribute has been added to this item:");
         player.sendMessage(attributeMessage(attribute, attributeModifier));
         return true;
     }
@@ -218,7 +214,7 @@ public class AttributeExecutor {
         ItemMeta mainHandItemMeta = mainHandItem.getItemMeta();
         Collection<AttributeModifier> oldAttributeModifiers = mainHandItemMeta.getAttributeModifiers(attribute);
         if (oldAttributeModifiers == null) {
-            player.sendMessage(ChatColor.RED + "The item doesn't contain the " + attribute + " attribute!");
+            player.sendMessage(ChatColor.RED + "This item doesn't contain the " + attribute + " attribute!");
             return false;
         }
 

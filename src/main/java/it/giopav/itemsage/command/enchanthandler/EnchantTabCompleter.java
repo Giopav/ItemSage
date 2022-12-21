@@ -10,15 +10,6 @@ import java.util.List;
 
 public class EnchantTabCompleter {
 
-    // args.length is always more than 1, if it equals 2 the options are:
-    //      - add
-    //      - old enchantments (if the item has any)
-    // if args.length equals 3, and the second argument is "add", then the options are:
-    //      - every enchantment
-    // if args.length equals 3, the second argument is an enchantment and the enchantment is already on the item,
-    // then the options are:
-    //      - remove
-    //      - old level
     public static void tabComplete(List<String> completions, ItemStack mainHandItem, String[] args) {
         if (args.length == 2) {
             completions.add("add");

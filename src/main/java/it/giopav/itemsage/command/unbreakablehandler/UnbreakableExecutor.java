@@ -31,13 +31,13 @@ public class UnbreakableExecutor {
         }
         boolean unbreakable = Boolean.parseBoolean(option);
         if (mainHandItemMeta.isUnbreakable() == unbreakable) {
-            player.sendMessage(ChatColor.RED + "The item is already " + (unbreakable ? "" : "not ") + "unbreakable.");
+            player.sendMessage(ChatColor.RED + "This item is already " + (unbreakable ? "" : "not ") + "unbreakable.");
             return false;
         }
 
         mainHandItemMeta.setUnbreakable(unbreakable);
         mainHandItem.setItemMeta(mainHandItemMeta);
-        player.sendMessage(ChatColor.GREEN + "The item " + (unbreakable ? "is now" : "is no longer") + " unbreakable.");
+        player.sendMessage(ChatColor.GREEN + "This item " + (unbreakable ? "is now" : "is no longer") + " unbreakable.");
         return true;
     }
 

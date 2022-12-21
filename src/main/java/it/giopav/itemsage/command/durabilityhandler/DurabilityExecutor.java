@@ -18,7 +18,7 @@ public class DurabilityExecutor {
             return false;
         }
         if (mainHandItem.getType().getMaxDurability() == 0) {
-            player.sendMessage(ChatColor.RED + "The item you're holding doesn't have durability.");
+            player.sendMessage(ChatColor.RED + "This item you're holding doesn't have durability.");
             return false;
         }
 
@@ -34,7 +34,7 @@ public class DurabilityExecutor {
 
     private static boolean sendDurability(Player player, ItemStack mainHandItem) {
         int durability = ((Damageable) mainHandItem.getItemMeta()).getDamage();
-        player.sendMessage(ChatColor.GREEN + "The item's durability is:");
+        player.sendMessage(ChatColor.GREEN + "This item's durability is:");
         player.sendMessage(durabilityMessage(mainHandItem.getType().getMaxDurability()-durability));
         return true;
     }
@@ -62,7 +62,7 @@ public class DurabilityExecutor {
         Damageable mainHandItemMeta = (Damageable) mainHandItem.getItemMeta();
         mainHandItemMeta.setDamage(maxDurability-durability);
         mainHandItem.setItemMeta(mainHandItemMeta);
-        player.sendMessage(ChatColor.GREEN + "The item's durability has been set to:");
+        player.sendMessage(ChatColor.GREEN + "This item's durability has been set to:");
         player.sendMessage(durabilityMessage(durability));
         return true;
     }

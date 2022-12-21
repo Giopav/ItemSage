@@ -28,7 +28,7 @@ public class MaterialExecutor {
 
     private static boolean sendMaterial(Player player, ItemStack mainHandItem) {
         Material material = mainHandItem.getType();
-        player.sendMessage(ChatColor.GREEN + "The item's material is:");
+        player.sendMessage(ChatColor.GREEN + "This item's material is:");
         player.sendMessage(materialMessage(material));
         return true;
     }
@@ -47,7 +47,7 @@ public class MaterialExecutor {
         Material material = Material.getMaterial(materialString);
         assert material != null;
         mainHandItem.setType(material);
-        player.sendMessage(ChatColor.GREEN + "The item's material has been set to:");
+        player.sendMessage(ChatColor.GREEN + "This item's material has been set to:");
         player.sendMessage(materialMessage(material));
         return true;
     }

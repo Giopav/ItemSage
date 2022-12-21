@@ -51,8 +51,6 @@ public class LoreExecutor {
         return true;
     }
 
-    // Returns true or false, depending on whether the command succeeds or not.
-    // Called if the arguments are 2.
     private static boolean sendLine(Player player, String[] args, ItemStack mainHandItem) {
         if (args[1].equalsIgnoreCase("add")) {
             player.sendMessage(ChatColor.RED + "You have to enter a line to add.");
@@ -74,7 +72,7 @@ public class LoreExecutor {
         List<Component> lore = mainHandItem.getItemMeta().lore();
         assert lore != null;
         if (lore.size() <= lineIndex-1) {
-            player.sendMessage(ChatColor.RED + "This item does not reach line " + lineIndex + ".");
+            player.sendMessage(ChatColor.RED + "This item doesn't reach line " + lineIndex + ".");
             return false;
         }
 
@@ -84,8 +82,6 @@ public class LoreExecutor {
         return true;
     }
 
-    // Returns true or false, depending on whether the command succeeds or not.
-    // Called if the arguments are 3 or more.
     private static boolean redirectAddOrEdit(Player player, String[] args, ItemStack mainHandItem) {
         if (args[1].equalsIgnoreCase("add")) {
             return addLine(player, args, mainHandItem);
@@ -97,8 +93,6 @@ public class LoreExecutor {
         }
     }
 
-    // Returns true or false, depending on whether the command succeeds or not.
-    // Called if the arguments are 3 or more and the second arg is "add".
     private static boolean addLine(Player player, String[] args, ItemStack mainHandItem) {
         String lineString = stringFromArray(args);
         mainHandItem.setItemMeta(addLoreLine(mainHandItem.getItemMeta(), lineString));
@@ -107,11 +101,9 @@ public class LoreExecutor {
         return true;
     }
 
-    // Returns true or false, depending on whether the command succeeds or not.
-    // Called if the arguments are 3 or more and the second arg is a line (int).
     private static boolean editLine(Player player, String[] args, ItemStack mainHandItem) {
         if (!mainHandItem.getItemMeta().hasLore()) {
-            player.sendMessage(ChatColor.RED + "This item does not have a lore.");
+            player.sendMessage(ChatColor.RED + "This item doesn't have a lore.");
             return false;
         }
         int lineIndex = Integer.parseInt(args[1]);
@@ -120,7 +112,7 @@ public class LoreExecutor {
             return false;
         }
         if (Objects.requireNonNull(mainHandItem.getItemMeta().lore()).size() <= lineIndex-1) {
-            player.sendMessage(ChatColor.RED + "This item does not reach line " + lineIndex + ".");
+            player.sendMessage(ChatColor.RED + "This item doesn't reach line " + lineIndex + ".");
             return false;
         }
         if (args[2].equalsIgnoreCase("remove") && args.length > 3) {
@@ -144,7 +136,6 @@ public class LoreExecutor {
         return true;
     }
 
-    // Returns the ItemMeta with the line (of the lore) at the given position removed.
     private static ItemMeta removeLoreLine(ItemMeta itemMeta, int line) {
         List<Component> lore = itemMeta.lore();
         assert lore != null;
@@ -153,7 +144,6 @@ public class LoreExecutor {
         return itemMeta;
     }
 
-    // Returns the ItemMeta with the string set at the position (of the lore) given.
     private static ItemMeta setLoreLine(ItemMeta itemMeta, String string, int line) {
         List<Component> lore = itemMeta.lore();
         assert lore != null;
@@ -161,8 +151,7 @@ public class LoreExecutor {
         itemMeta.lore(lore);
         return itemMeta;
     }
-    
-    // Returns the ItemMeta with the string added to the end (of the lore).
+
     private static ItemMeta addLoreLine(ItemMeta itemMeta, String string) {
         List<Component> lore;
         if (itemMeta.hasLore()) {
@@ -176,10 +165,6 @@ public class LoreExecutor {
         return itemMeta;
     }
 
-    // Only used for the command arguments.
-    // Returns the input array as a string connected by spaces (and trimmed at the end ofc).
-    // !! IGNORES THE FIRST 2 ELEMENTS !!
-    // This is because the first two elements are always the arguments of the command, not the line.
     private static String stringFromArray(String[] strings) {
         StringBuilder stringBuilder = new StringBuilder();
         for (int i = 2; i < strings.length; i++) {

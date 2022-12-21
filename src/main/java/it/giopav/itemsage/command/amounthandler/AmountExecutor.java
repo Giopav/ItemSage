@@ -29,7 +29,7 @@ public class AmountExecutor {
 
     private static boolean sendAmount(Player player, ItemStack mainHandItem) {
         int amount = mainHandItem.getAmount();
-        player.sendMessage(ChatColor.GREEN + "The item's amount is:");
+        player.sendMessage(ChatColor.GREEN + "This item's amount is:");
         player.sendMessage(amountMessage(amount));
         return true;
     }
@@ -54,7 +54,7 @@ public class AmountExecutor {
         }
 
         mainHandItem.setAmount(amount);
-        player.sendMessage(ChatColor.GREEN + "The item's amount has been set to:");
+        player.sendMessage(ChatColor.GREEN + "This item's amount has been set to:");
         player.sendMessage(amountMessage(amount));
         return true;
     }

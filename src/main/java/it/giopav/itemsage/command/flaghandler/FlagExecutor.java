@@ -32,14 +32,14 @@ public class FlagExecutor {
     private static boolean sendFlags(Player player, ItemStack mainHandItem) {
         Set<ItemFlag> itemFlags = mainHandItem.getItemFlags();
         if (itemFlags.isEmpty()) {
-            player.sendMessage(ChatColor.RED + "This item does not have any flag.");
+            player.sendMessage(ChatColor.RED + "This item doesn't have any flag.");
             return false;
         }
 
         if (itemFlags.size() == 1) {
-            player.sendMessage(ChatColor.GREEN + "The flag of the item is:");
+            player.sendMessage(ChatColor.GREEN + "This item's flag is:");
         } else {
-            player.sendMessage(ChatColor.GREEN + "The flags of the item are:");
+            player.sendMessage(ChatColor.GREEN + "This item's flags are:");
         }
         for (ItemFlag itemFlag : itemFlags) {
             player.sendMessage(Component.text(ChatColor.GRAY + "» ")
@@ -59,7 +59,7 @@ public class FlagExecutor {
     private static boolean addFlag(Player player, String[] args, ItemStack mainHandItem) {
         ItemFlag flag = Utils.getItemFlagValue(args[2]);
         if (flag == null) {
-            player.sendMessage(ChatColor.RED + "The flag " + args[2] + " does not exist.");
+            player.sendMessage(ChatColor.RED + "The flag " + args[2] + " doesn't exist.");
             return false;
         }
 
@@ -72,11 +72,11 @@ public class FlagExecutor {
     private static boolean removeFlag(Player player, String[] args, ItemStack mainHandItem) {
         ItemFlag flag = Utils.getItemFlagValue(args[1]);
         if (flag == null) {
-            player.sendMessage(ChatColor.RED + "The flag " + args[1] + " does not exist.");
+            player.sendMessage(ChatColor.RED + "The flag " + args[1] + " doesn't exist.");
             return false;
         }
         if (!mainHandItem.hasItemFlag(flag)) {
-            player.sendMessage(ChatColor.RED + "The item does not contain the flag " + flag + ".");
+            player.sendMessage(ChatColor.RED + "This item doesn't contain the flag " + flag + ".");
             return false;
         }
 

@@ -14,7 +14,6 @@ import java.util.regex.Pattern;
 
 public class Utils {
 
-    // Returns the deserialized component of the input string.
     public static Component deserializeRightString(String string) {
         Component component;
         if (Pattern.matches(".*[&§][0-9a-fk-or].*", string)) {
@@ -25,7 +24,6 @@ public class Utils {
         return component;
     }
 
-    // Returns the serialized string of the input component.
     public static String serializeRightString(Component component) {
         String componentString = PlainTextComponentSerializer.plainText().serialize(component);
         String string;
@@ -37,8 +35,6 @@ public class Utils {
         return string;
     }
 
-    // Returns the respective attribute from the provided string.
-    // If there is none, null is give instead.
     public static Attribute getAttributeValue(String string) {
         Attribute attribute = null;
         for (Attribute attributeElement : Attribute.values()) {
@@ -50,8 +46,6 @@ public class Utils {
         return attribute;
     }
 
-    // Returns the respective enchantment from the provided string.
-    // If there is none, null is give instead.
     public static Enchantment getEnchantmentValue(String string) {
         Enchantment enchantment = null;
         for (Enchantment enchantmentElement : Enchantment.values()) {
@@ -63,8 +57,6 @@ public class Utils {
         return enchantment;
     }
 
-    // Returns the respective equipment slot from the provided string.
-    // If there is none, null is give instead.
     public static EquipmentSlot getEquipmentSlotValue(String string) {
         EquipmentSlot equipmentSlot = null;
         for (EquipmentSlot equipmentSlotElement : EquipmentSlot.values()) {

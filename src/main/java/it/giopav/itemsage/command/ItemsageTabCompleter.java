@@ -6,6 +6,7 @@ import it.giopav.itemsage.command.datahandler.DataTabCompleter;
 import it.giopav.itemsage.command.durabilityhandler.DurabilityTabCompleter;
 import it.giopav.itemsage.command.enchanthandler.EnchantTabCompleter;
 import it.giopav.itemsage.command.flaghandler.FlagTabCompleter;
+import it.giopav.itemsage.command.helphandler.HelpTabCompleter;
 import it.giopav.itemsage.command.lorehandler.LoreTabCompleter;
 import it.giopav.itemsage.command.materialhandler.MaterialTabCompleter;
 import it.giopav.itemsage.command.namehandler.NameTabCompleter;
@@ -25,8 +26,6 @@ import java.util.List;
 
 public class ItemsageTabCompleter implements TabCompleter {
 
-    // TabCompletes for args.length == 1 with help, name, lore, enchant, attribute, flag, amount, and material.
-    // For args.length > 1 it calls the respective class and methods, if there is none it just returns null.
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (!(sender instanceof Player)) {
@@ -50,11 +49,11 @@ public class ItemsageTabCompleter implements TabCompleter {
             completions.add("durability");
             completions.add("enchant");
             completions.add("flag");
-            completions.add("help");
             completions.add("lore");
             completions.add("material");
             completions.add("name");
             completions.add("unbreakable");
+            completions.add("help");
         } else if (args.length > 1) {
             switch (args[0]) {
                 case "amount":
@@ -86,6 +85,9 @@ public class ItemsageTabCompleter implements TabCompleter {
                     break;
                 case "unbreakable":
                     UnbreakableTabCompleter.tabComplete(completions, args);
+                    break;
+                case "help":
+                    HelpTabCompleter.tabComplete(completions, args);
                     break;
                 default:
             }

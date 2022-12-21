@@ -30,11 +30,11 @@ public class NameExecutor {
 
     private static boolean sendName(Player player, ItemStack mainHandItem) {
         if (!mainHandItem.getItemMeta().hasDisplayName()) {
-            player.sendMessage(ChatColor.RED + "This item does not have a name.");
+            player.sendMessage(ChatColor.RED + "This item doesn't have a name.");
             return false;
         }
 
-        player.sendMessage(ChatColor.GREEN + "The item's name is:");
+        player.sendMessage(ChatColor.GREEN + "This item's name is:");
         player.sendMessage(nameMessage(mainHandItem.getItemMeta().displayName()));
         return true;
     }

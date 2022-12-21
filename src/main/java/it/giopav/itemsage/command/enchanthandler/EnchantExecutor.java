@@ -63,11 +63,11 @@ public class EnchantExecutor {
         }
         Enchantment enchantment = Utils.getEnchantmentValue(args[1]);
         if (enchantment == null) {
-            player.sendMessage(ChatColor.RED + "The entered enchantment does not exist.");
+            player.sendMessage(ChatColor.RED + "The entered enchantment doesn't exist.");
             return false;
         }
         if (!mainHandItem.getItemMeta().hasEnchant(enchantment)) {
-            player.sendMessage(ChatColor.RED + "This item does not have the entered enchantment.");
+            player.sendMessage(ChatColor.RED + "This item doesn't have the entered enchantment.");
             return false;
         }
 
@@ -87,7 +87,7 @@ public class EnchantExecutor {
     private static boolean addEnchant(Player player, String[] args, ItemStack mainHandItem) {
         Enchantment enchantment = Enchantment.getByKey(NamespacedKey.fromString(args[2].toLowerCase()));
         if (enchantment == null) {
-            player.sendMessage(ChatColor.RED + "The enchantment " + args[2].toUpperCase() + " does not exist.");
+            player.sendMessage(ChatColor.RED + "The enchantment " + args[2].toUpperCase() + " doesn't exist.");
             return false;
         }
 
@@ -104,7 +104,7 @@ public class EnchantExecutor {
             return false;
         }
         if (!mainHandItem.getItemMeta().getEnchants().containsKey(enchantment)) {
-            player.sendMessage(ChatColor.RED + "The item does not have the enchant " + args[1].toUpperCase() + ".");
+            player.sendMessage(ChatColor.RED + "This item doesn't have the enchant " + args[1].toUpperCase() + ".");
             return false;
         }
 
