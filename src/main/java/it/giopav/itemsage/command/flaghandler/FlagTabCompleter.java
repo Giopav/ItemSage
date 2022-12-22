@@ -1,6 +1,5 @@
 package it.giopav.itemsage.command.flaghandler;
 
-import it.giopav.itemsage.Utils;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 
@@ -16,8 +15,8 @@ public class FlagTabCompleter {
             completions.add("add");
             completions.addAll(itemFlags(mainHandItem));
         } else if (args.length == 3
-                && Utils.getItemFlagValue(args[1]) != null
-                && mainHandItem.hasItemFlag(Utils.getItemFlagValue(args[1]))) {
+                && FlagHelper.getItemFlagValue(args[1]) != null
+                && mainHandItem.hasItemFlag(FlagHelper.getItemFlagValue(args[1]))) {
             completions.add("remove");
         } else if (args.length == 3
                 && args[1].equalsIgnoreCase("add")) {

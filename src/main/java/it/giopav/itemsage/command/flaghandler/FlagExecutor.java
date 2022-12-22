@@ -1,6 +1,6 @@
 package it.giopav.itemsage.command.flaghandler;
 
-import it.giopav.itemsage.Utils;
+import it.giopav.itemsage.command.StringUtils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import org.bukkit.ChatColor;
@@ -57,7 +57,7 @@ public class FlagExecutor {
     }
 
     private static boolean addFlag(Player player, String[] args, ItemStack mainHandItem) {
-        ItemFlag flag = Utils.getItemFlagValue(args[2]);
+        ItemFlag flag = FlagHelper.getItemFlagValue(args[2]);
         if (flag == null) {
             player.sendMessage(ChatColor.RED + "The flag " + args[2] + " doesn't exist.");
             return false;
@@ -70,7 +70,7 @@ public class FlagExecutor {
     }
 
     private static boolean removeFlag(Player player, String[] args, ItemStack mainHandItem) {
-        ItemFlag flag = Utils.getItemFlagValue(args[1]);
+        ItemFlag flag = FlagHelper.getItemFlagValue(args[1]);
         if (flag == null) {
             player.sendMessage(ChatColor.RED + "The flag " + args[1] + " doesn't exist.");
             return false;
@@ -87,7 +87,7 @@ public class FlagExecutor {
     }
 
     private static Component flagMessage(ItemFlag flag) {
-        String userFriendlyFlag = Utils.userFriendlyString(flag.toString().replace("_", " "));
+        String userFriendlyFlag = StringUtils.userFriendlyString(flag.toString().replace("_", " "));
         return Component.text()
                 .append(Component.text(ChatColor.GRAY + userFriendlyFlag)
                         .hoverEvent(Component.text(ChatColor.WHITE + "» Click to copy «"))

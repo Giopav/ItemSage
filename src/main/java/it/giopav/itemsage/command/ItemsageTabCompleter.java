@@ -37,6 +37,7 @@ public class ItemsageTabCompleter implements TabCompleter {
                 return null;
             }
         }
+
         Player player = (Player) sender;
         ItemStack mainHandItem = player.getEquipment().getItemInMainHand();
         List<String> completions = new ArrayList<>();

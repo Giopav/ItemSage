@@ -1,6 +1,5 @@
 package it.giopav.itemsage.command.attributehandler;
 
-import it.giopav.itemsage.Utils;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.inventory.EquipmentSlot;
@@ -17,24 +16,24 @@ public class AttributeTabCompleter {
         if (args.length == 2) {
             completions.addAll(allEquipmentSlots());
         } else if (args.length == 3
-                && Utils.getEquipmentSlotValue(args[1]) != null) {
+                && AttributeHelper.getEquipmentSlotValue(args[1]) != null) {
             completions.add("add");
             completions.addAll(itemAttributes(mainHandItem, EquipmentSlot.valueOf(args[1])));
         } else if (args.length == 4
-                && Utils.getEquipmentSlotValue(args[1]) != null
+                && AttributeHelper.getEquipmentSlotValue(args[1]) != null
                 && args[2].equalsIgnoreCase("add")) {
-            completions.addAll(allAttributes(mainHandItem, Utils.getEquipmentSlotValue(args[1])));
+            completions.addAll(allAttributes(mainHandItem, AttributeHelper.getEquipmentSlotValue(args[1])));
         } else if (args.length == 4
-                && Utils.getEquipmentSlotValue(args[1]) != null
+                && AttributeHelper.getEquipmentSlotValue(args[1]) != null
                 && !args[2].equalsIgnoreCase("add")
                 && mainHandItem.getItemMeta().hasAttributeModifiers()
-                && Utils.getAttributeValue(args[2]) != null) {
+                && AttributeHelper.getAttributeValue(args[2]) != null) {
             completions.add("remove");
             completions.addAll(attributeModifiers(mainHandItem, EquipmentSlot.valueOf(args[1]), Attribute.valueOf(args[2])));
         } else if (args.length == 6
-                && Utils.getEquipmentSlotValue(args[1]) != null
+                && AttributeHelper.getEquipmentSlotValue(args[1]) != null
                 && args[2].equalsIgnoreCase("add")
-                && Utils.getAttributeValue(args[3]) != null
+                && AttributeHelper.getAttributeValue(args[3]) != null
                 && Pattern.matches("-?\\d+", args[4])) {
             completions.addAll(allOperations());
         }

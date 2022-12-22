@@ -1,6 +1,6 @@
 package it.giopav.itemsage.command.lorehandler;
 
-import it.giopav.itemsage.Utils;
+import it.giopav.itemsage.command.StringUtils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.format.TextDecoration;
@@ -97,7 +97,7 @@ public class LoreExecutor {
         String lineString = stringFromArray(args);
         mainHandItem.setItemMeta(addLoreLine(mainHandItem.getItemMeta(), lineString));
         player.sendMessage(ChatColor.GREEN + "The lore line has been added:");
-        player.sendMessage(lineMessage(Utils.deserializeRightString(lineString)));
+        player.sendMessage(lineMessage(StringUtils.deserializeRightString(lineString)));
         return true;
     }
 
@@ -131,7 +131,7 @@ public class LoreExecutor {
             String line = stringFromArray(args);
             mainHandItem.setItemMeta(setLoreLine(mainHandItem.getItemMeta(), line, lineIndex-1));
             player.sendMessage(ChatColor.GREEN + "The lore line " + lineIndex + " has been set to:");
-            player.sendMessage(lineMessage(Utils.deserializeRightString(line)));
+            player.sendMessage(lineMessage(StringUtils.deserializeRightString(line)));
         }
         return true;
     }
@@ -147,7 +147,7 @@ public class LoreExecutor {
     private static ItemMeta setLoreLine(ItemMeta itemMeta, String string, int line) {
         List<Component> lore = itemMeta.lore();
         assert lore != null;
-        lore.set(line, Utils.deserializeRightString(string).decoration(TextDecoration.ITALIC, false));
+        lore.set(line, StringUtils.deserializeRightString(string).decoration(TextDecoration.ITALIC, false));
         itemMeta.lore(lore);
         return itemMeta;
     }
@@ -160,7 +160,7 @@ public class LoreExecutor {
             lore = new ArrayList<>();
         }
         assert lore != null;
-        lore.add(Utils.deserializeRightString(string).decoration(TextDecoration.ITALIC, false));
+        lore.add(StringUtils.deserializeRightString(string).decoration(TextDecoration.ITALIC, false));
         itemMeta.lore(lore);
         return itemMeta;
     }
@@ -174,7 +174,7 @@ public class LoreExecutor {
     }
 
     private static Component lineMessage(Component line) {
-        String lineString = Utils.serializeRightString(line);
+        String lineString = StringUtils.serializeRightString(line);
         return line
                 .hoverEvent(Component.text(ChatColor.WHITE + "» Click to copy «"))
                 .clickEvent(ClickEvent.copyToClipboard(lineString));

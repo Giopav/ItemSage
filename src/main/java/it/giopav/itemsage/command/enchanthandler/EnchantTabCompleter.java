@@ -1,6 +1,5 @@
 package it.giopav.itemsage.command.enchanthandler;
 
-import it.giopav.itemsage.Utils;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 
@@ -19,10 +18,10 @@ public class EnchantTabCompleter {
             completions.addAll(allEnchantments(mainHandItem));
         } else if (args.length == 3
                 && mainHandItem.getItemMeta().hasEnchants()
-                && Utils.getEnchantmentValue(args[1]) != null
-                && mainHandItem.getItemMeta().hasEnchant(Utils.getEnchantmentValue(args[1]))) {
+                && EnchantHelper.getEnchantmentValue(args[1]) != null
+                && mainHandItem.getItemMeta().hasEnchant(EnchantHelper.getEnchantmentValue(args[1]))) {
             completions.add("remove");
-            completions.add(String.valueOf(mainHandItem.getItemMeta().getEnchantLevel(Utils.getEnchantmentValue(args[1]))));
+            completions.add(String.valueOf(mainHandItem.getItemMeta().getEnchantLevel(EnchantHelper.getEnchantmentValue(args[1]))));
         }
     }
 

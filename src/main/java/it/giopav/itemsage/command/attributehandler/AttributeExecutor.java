@@ -1,7 +1,7 @@
 package it.giopav.itemsage.command.attributehandler;
 
 import com.google.common.collect.Multimap;
-import it.giopav.itemsage.Utils;
+import it.giopav.itemsage.command.StringUtils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import org.bukkit.ChatColor;
@@ -30,7 +30,7 @@ public class AttributeExecutor {
         } else if (args.length == 2) {
             return sendSlotAttributes(player, args, mainHandItem);
         } else if (args.length == 3) {
-            return sendAttributes(player, args, mainHandItem);
+            return sendAttribute(player, args, mainHandItem);
         } else if (args.length > 3) {
             return redirect(player, args, mainHandItem);
         }
@@ -71,7 +71,7 @@ public class AttributeExecutor {
             player.sendMessage(ChatColor.RED + "This item doesn't contain attributes.");
             return false;
         }
-        EquipmentSlot equipmentSlot = Utils.getEquipmentSlotValue(args[1]);
+        EquipmentSlot equipmentSlot = AttributeHelper.getEquipmentSlotValue(args[1]);
         if (equipmentSlot == null) {
             player.sendMessage(ChatColor.RED + "The equipment slot \"" + args[1] + "\" doesn't exist.");
             return false;
@@ -96,32 +96,31 @@ public class AttributeExecutor {
         return true;
     }
 
-    private static boolean sendAttributes(Player player, String[] args, ItemStack mainHandItem) {
+    private static boolean sendAttribute(Player player, String[] args, ItemStack mainHandItem) {
         if (args[2].equalsIgnoreCase("add")) {
             player.sendMessage(ChatColor.RED + "You must insert an attribute to add.");
             return false;
         }
-        args[1] = args[1].toUpperCase();
         if (!mainHandItem.getItemMeta().hasAttributeModifiers()) {
             player.sendMessage(ChatColor.RED + "This item doesn't contain attributes.");
             return false;
         }
-        EquipmentSlot equipmentSlot = Utils.getEquipmentSlotValue(args[1]);
+        EquipmentSlot equipmentSlot = AttributeHelper.getEquipmentSlotValue(args[1]);
         if (equipmentSlot == null) {
-            player.sendMessage(ChatColor.RED + "The equipment slot \"" + args[1] + "\" doesn't exist.");
+            player.sendMessage(ChatColor.RED + "The equipment slot \"" + args[1].toUpperCase() + "\" doesn't exist.");
             return false;
         }
         if (mainHandItem.getItemMeta().getAttributeModifiers(equipmentSlot).isEmpty()) {
             player.sendMessage(ChatColor.RED + "The equipment slot \"" + equipmentSlot + "\" doesn't contain attributes.");
             return false;
         }
-        Attribute attribute = Utils.getAttributeValue(args[2]);
+        Attribute attribute = AttributeHelper.getAttributeValue(args[2]);
         if (attribute == null) {
             player.sendMessage(ChatColor.RED + "The attribute \"" + args[2] + "\" doesn't exist.");
             return false;
         }
         if (!mainHandItem.getItemMeta().getAttributeModifiers(equipmentSlot).containsKey(attribute)) {
-            player.sendMessage(ChatColor.RED + "The equipment slot \"" + args[1] + "\" doesn't contain the attribute " + attribute + ".");
+            player.sendMessage(ChatColor.RED + "The equipment slot \"" + equipmentSlot + "\" doesn't contain the attribute " + attribute + ".");
             return false;
         }
 
@@ -141,7 +140,7 @@ public class AttributeExecutor {
         if (args[2].equalsIgnoreCase("add")) {
             return redirectAdd(player, args, mainHandItem);
         } else if (args.length == 4) {
-            return editAttribute(player, mainHandItem, args[1], args[2], args[3]);
+            return editAttribute(player, mainHandItem, args);
         } else {
             player.sendMessage(ChatColor.RED + "This command doesn't work like this.");
             return false;
@@ -150,12 +149,13 @@ public class AttributeExecutor {
 
     private static boolean redirectAdd(Player player, String[] args, ItemStack mainHandItem) {
         assert args.length > 3;
-        if (args.length == 4) {
-            return addAttribute(player, mainHandItem, args[1], args[3], "1", "ADD_NUMBER");
-        } else if (args.length == 5) {
-            return addAttribute(player, mainHandItem, args[1], args[3], args[4], "ADD_NUMBER");
-        } else if (args.length == 6) {
-            return addAttribute(player, mainHandItem, args[1], args[3], args[4], args[5]);
+        if (args.length < 7) {
+            return addAttribute(player,
+                    mainHandItem,
+                    args[1],
+                    args[3],
+                    (args.length == 4 ? "1" : args[4]),
+                    (args.length == 6 ? args[5] : "ADD_NUMBER"));
         } else {
             player.sendMessage(ChatColor.RED + "There are too many arguments! The last should be " + args[5] + "");
             return false;
@@ -165,13 +165,13 @@ public class AttributeExecutor {
     private static boolean addAttribute(Player player, ItemStack mainHandItem, String equipmentSlotString,
                                         String attributeString, String amountString, String operationString) {
         equipmentSlotString = equipmentSlotString.toUpperCase();
-        EquipmentSlot slot = Utils.getEquipmentSlotValue(equipmentSlotString);
+        EquipmentSlot slot = AttributeHelper.getEquipmentSlotValue(equipmentSlotString);
         if (slot == null) {
             player.sendMessage(ChatColor.RED + "The argument " + equipmentSlotString + " is not an equipment slot!");
             return false;
         }
         attributeString = attributeString.toUpperCase();
-        Attribute attribute = Utils.getAttributeValue(attributeString);
+        Attribute attribute = AttributeHelper.getAttributeValue(attributeString);
         if (attribute == null) {
             player.sendMessage(ChatColor.RED + "The argument " + attributeString + " is not an attribute!");
             return false;
@@ -181,7 +181,7 @@ public class AttributeExecutor {
             return false;
         }
         double amount = Double.parseDouble(amountString);
-        AttributeModifier.Operation operation = Utils.getOperationValue(operationString);
+        AttributeModifier.Operation operation = AttributeHelper.getOperationValue(operationString);
         if (operation == null) {
             player.sendMessage(ChatColor.RED + "The argument " + operationString + " is not a valid operation!");
             return false;
@@ -197,18 +197,15 @@ public class AttributeExecutor {
         return true;
     }
 
-    private static boolean editAttribute(Player player, ItemStack mainHandItem, String equipmentSlotString,
-                                         String attributeString, String action) {
-        equipmentSlotString = equipmentSlotString.toUpperCase();
-        EquipmentSlot slot = Utils.getEquipmentSlotValue(equipmentSlotString);
+    private static boolean editAttribute(Player player, ItemStack mainHandItem, String[] args) {
+        EquipmentSlot slot = AttributeHelper.getEquipmentSlotValue(args[1]);
         if (slot == null) {
-            player.sendMessage(ChatColor.RED + "The argument " + equipmentSlotString + " is not an equipment slot!");
+            player.sendMessage(ChatColor.RED + "The argument " + args[1].toUpperCase() + " is not an equipment slot!");
             return false;
         }
-        attributeString = attributeString.toUpperCase();
-        Attribute attribute = Utils.getAttributeValue(attributeString);
+        Attribute attribute = AttributeHelper.getAttributeValue(args[2]);
         if (attribute == null) {
-            player.sendMessage(ChatColor.RED + "The argument " + attributeString + " is not an attribute!");
+            player.sendMessage(ChatColor.RED + "The argument " + args[2].toUpperCase() + " is not an attribute!");
             return false;
         }
         ItemMeta mainHandItemMeta = mainHandItem.getItemMeta();
@@ -218,6 +215,7 @@ public class AttributeExecutor {
             return false;
         }
 
+        String action = args[3];
         if (Pattern.matches("(-\\+)?\\d+((.)\\d+)?", action)) {
             AttributeModifier oldAttributeModifier = oldAttributeModifiers.iterator().next();
             AttributeModifier attributeModifier =
@@ -243,7 +241,7 @@ public class AttributeExecutor {
         double modifierAmount = attributeModifier.getAmount();
         String attributeUserFriendly = (modifierAmount < 0 ? "-" : "") +
                 (attributeModifier.getOperation() != AttributeModifier.Operation.ADD_NUMBER ? modifierAmount*100 : modifierAmount) +
-                " " + Utils.userFriendlyString(attribute.getKey().toString().split("\\.")[1].replace("_", " "));
+                " " + StringUtils.userFriendlyString(attribute.getKey().toString().split("\\.")[1].replace("_", " "));
         String attributeString = attribute + " " +
                 (modifierAmount < 0 ? "-" : "") + modifierAmount
                 + " " + attributeModifier.getOperation();

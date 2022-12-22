@@ -1,6 +1,5 @@
 package it.giopav.itemsage.command.enchanthandler;
 
-import it.giopav.itemsage.Utils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
@@ -61,7 +60,7 @@ public class EnchantExecutor {
             player.sendMessage(ChatColor.RED + "This item is not enchanted.");
             return false;
         }
-        Enchantment enchantment = Utils.getEnchantmentValue(args[1]);
+        Enchantment enchantment = EnchantHelper.getEnchantmentValue(args[1]);
         if (enchantment == null) {
             player.sendMessage(ChatColor.RED + "The entered enchantment doesn't exist.");
             return false;

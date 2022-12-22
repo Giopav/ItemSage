@@ -1,6 +1,6 @@
 package it.giopav.itemsage.command.namehandler;
 
-import it.giopav.itemsage.Utils;
+import it.giopav.itemsage.command.StringUtils;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -18,7 +18,7 @@ public class NameTabCompleter {
 
     private static List<String> itemDisplayName(ItemMeta mainHandItemMeta) {
         if (mainHandItemMeta.hasDisplayName()) {
-            return Collections.singletonList(Utils.serializeRightString(mainHandItemMeta.displayName()));
+            return Collections.singletonList(StringUtils.serializeRightString(mainHandItemMeta.displayName()));
         }
         return Collections.emptyList();
     }

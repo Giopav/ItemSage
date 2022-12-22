@@ -15,7 +15,7 @@ public class DurabilityTabCompleter {
             completions.addAll(itemDurability(mainHandItem));
         } else if (args.length == 3
                 && args[1].equalsIgnoreCase("set")) {
-            completions.addAll(commonDurabilities(mainHandItem));
+            completions.addAll(commonDurability(mainHandItem));
         }
     }
 
@@ -28,7 +28,7 @@ public class DurabilityTabCompleter {
         }
     }
 
-    private static List<String> commonDurabilities(ItemStack mainHandItem) {
+    private static List<String> commonDurability(ItemStack mainHandItem) {
         if (mainHandItem.getType().getMaxDurability() != 0) {
             int maxDurability = mainHandItem.getType().getMaxDurability();
             return Arrays.asList(String.valueOf(maxDurability), String.valueOf(maxDurability/2), "1");

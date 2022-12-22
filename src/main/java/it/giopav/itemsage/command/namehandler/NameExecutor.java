@@ -1,6 +1,6 @@
 package it.giopav.itemsage.command.namehandler;
 
-import it.giopav.itemsage.Utils;
+import it.giopav.itemsage.command.StringUtils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.format.TextDecoration;
@@ -49,7 +49,7 @@ public class NameExecutor {
         for (int i = 2; i < args.length; i++) {
             nameBuilder.append(args[i]).append(" ");
         }
-        Component deserializedName = Utils.deserializeRightString(nameBuilder.toString().trim())
+        Component deserializedName = StringUtils.deserializeRightString(nameBuilder.toString().trim())
                 .decoration(TextDecoration.ITALIC, false);
 
         mainHandItem.setItemMeta(itemMetaWithName(mainHandItem, deserializedName));
@@ -65,8 +65,8 @@ public class NameExecutor {
     }
 
     private static Component nameMessage(Component displayName) {
-        String nameString = Utils.serializeRightString(displayName);
-        return Utils.deserializeRightString(nameString).decoration(TextDecoration.ITALIC, false)
+        String nameString = StringUtils.serializeRightString(displayName);
+        return StringUtils.deserializeRightString(nameString).decoration(TextDecoration.ITALIC, false)
                 .hoverEvent(Component.text(ChatColor.WHITE + "» Click to copy «"))
                 .clickEvent(ClickEvent.copyToClipboard(nameString));
     }

@@ -1,6 +1,6 @@
 package it.giopav.itemsage.command.lorehandler;
 
-import it.giopav.itemsage.Utils;
+import it.giopav.itemsage.command.StringUtils;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -21,7 +21,7 @@ public class LoreTabCompleter {
                 && Pattern.matches("\\d+", args[1])
                 && Objects.requireNonNull(mainHandItem.getItemMeta().lore()).size() > Integer.parseInt(args[1])-1) {
             completions.add("remove");
-            completions.add(Utils.serializeRightString(Objects.requireNonNull(mainHandItem.lore()).get(Integer.parseInt(args[1])-1)));
+            completions.add(StringUtils.serializeRightString(Objects.requireNonNull(mainHandItem.lore()).get(Integer.parseInt(args[1])-1)));
         }
     }
 
