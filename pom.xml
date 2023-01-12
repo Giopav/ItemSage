@@ -6,7 +6,7 @@
 
     <groupId>it.giopav</groupId>
     <artifactId>itemsage</artifactId>
-    <version>1.3</version>
+    <version>1.3.2</version>
     <packaging>jar</packaging>
 
     <name>ItemSage</name>
