@@ -1,0 +1,25 @@
+############################
+# it.giopav.itemsage.ItemSage config.yml file #
+#       Have fun! :)       #
+############################
+command:
+  amount:
+    enabled: true
+  attribute:
+    enabled: true
+  data:
+    enabled: false
+  durability:
+    enabled: true
+  enchant:
+    enabled: true
+  flag:
+    enabled: true
+  lore:
+    enabled: true
+  material:
+    enabled: true
+  name:
+    enabled: true
+  unbreakable:
+    enabled: true
